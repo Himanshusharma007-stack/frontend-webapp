@@ -7,7 +7,9 @@ export default function Base() {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <div className="max-w-screen-lg mx-auto px-4 my-8">
+        <Outlet />
+      </div>
       <Footer />
     </>
   );
