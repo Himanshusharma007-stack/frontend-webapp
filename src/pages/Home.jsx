@@ -4,7 +4,9 @@ import { getRestaurants } from "../services/Restaurants";
 
 export default function Homepage() {
   const [restaurantList, setRestaurantList] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,6 +14,7 @@ export default function Homepage() {
         setLoading(true);
         const response = await getRestaurants();
         setRestaurantList(response.data);
+        setFilteredRestaurants(response.data)
       } catch (error) {
         console.error("Error --> ", error);
       } finally {
@@ -21,6 +24,18 @@ export default function Homepage() {
 
     fetchData();
   }, []);
+
+  function handleSearchChange(e) {
+    console.log('e ----- ',e.target.value);
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = restaurantList.filter(resto =>
+      resto.name.toLowerCase().includes(query) ||
+      resto.cuisine.toLowerCase().includes(query)
+    );
+    setFilteredRestaurants(filtered);
+
+  }
 
   return (
     <>
@@ -35,23 +50,25 @@ export default function Homepage() {
             <input
               className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
               type="email"
-              placeholder="Enter Cafe name or location"
+              placeholder="Enter Cafe Name or Cuisine"
+              value={searchQuery}
+              onChange={handleSearchChange}
             ></input>
-            <button
+            {/* <button
               type="button"
               className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
             >
               Search
-            </button>
+            </button> */}
           </div>
         </div>
 
         <div className="pt-8 flex justify-center">
           {loading ? (
-            <p>Loading...</p>
-          ) : (
+            <div>Loading...</div>
+          ) : !filteredRestaurants.length ? <div>No Restaurant/Cuisine found, with the given name.</div> : (
             <div className="flex flex-wrap justify-center gap-4 md:gap-12">
-              {restaurantList.map((resto) => (
+              {filteredRestaurants.map((resto) => (
                 <Card key={resto.id} obj={resto} />
               ))}
             </div>
