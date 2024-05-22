@@ -5,12 +5,12 @@ import { Outlet } from "react-router-dom";
 
 export default function Base() {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="max-w-screen-lg mx-auto px-4 my-8">
+      <div className="flex-grow max-w-screen-lg mx-auto px-4 my-8">
         <Outlet />
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
