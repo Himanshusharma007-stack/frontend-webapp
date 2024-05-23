@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Homepage from "./pages/Home.jsx";
 import ErrorPage from "./pages/Error.jsx";
 import Base from "./pages/Base.jsx";
+import RestoMenu from "./pages/RestoMenu.jsx";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,11 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Homepage />,
-      }
+      },
+      {
+        path: "restaurant/:id",
+        element: <RestoMenu />,
+      },
     ],
   },
 ]);

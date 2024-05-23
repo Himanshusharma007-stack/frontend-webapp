@@ -1,12 +1,14 @@
 import Card from "../components/Card";
 import React, { useState, useEffect } from "react";
 import { getRestaurants } from "../services/Restaurants";
+import { useNavigate } from "react-router-dom";
 
 export default function Homepage() {
+  const navigate = useNavigate();
   const [restaurantList, setRestaurantList] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,7 +16,7 @@ export default function Homepage() {
         setLoading(true);
         const response = await getRestaurants();
         setRestaurantList(response.data);
-        setFilteredRestaurants(response.data)
+        setFilteredRestaurants(response.data);
       } catch (error) {
         console.error("Error --> ", error);
       } finally {
@@ -26,15 +28,19 @@ export default function Homepage() {
   }, []);
 
   function handleSearchChange(e) {
-    console.log('e ----- ',e.target.value);
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-    const filtered = restaurantList.filter(resto =>
-      resto.name.toLowerCase().includes(query) ||
-      resto.cuisine.toLowerCase().includes(query)
+    const filtered = restaurantList.filter(
+      (resto) =>
+        resto.name.toLowerCase().includes(query) ||
+        resto.cuisine.toLowerCase().includes(query)
     );
     setFilteredRestaurants(filtered);
+  }
 
+  function handleCardClicked(data) {
+    let restaurantId = data._id;
+    navigate(`/restaurant/${restaurantId}`);
   }
 
   return (
@@ -66,10 +72,16 @@ export default function Homepage() {
         <div className="pt-8 flex justify-center">
           {loading ? (
             <div>Loading...</div>
-          ) : !filteredRestaurants.length ? <div>No Restaurant/Cuisine found, with the given name.</div> : (
+          ) : !filteredRestaurants.length ? (
+            <div>No Restaurant/Cuisine found, with the given name.</div>
+          ) : (
             <div className="flex flex-wrap justify-center gap-4 md:gap-12">
               {filteredRestaurants.map((resto) => (
-                <Card key={resto.id} obj={resto} />
+                <Card
+                  key={resto._id}
+                  obj={resto}
+                  cardClicked={(data) => handleCardClicked(data)}
+                />
               ))}
             </div>
           )}
