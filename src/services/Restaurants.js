@@ -20,4 +20,14 @@ export const getRestaurants = async () => {
   }
 };
 
+export const getRestaurantsMenuById = async (id) => {
+  try {
+    const response = await apiClient.get(`/restaurantMenu/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching restaurants:", error);
+    throw error;
+  }
+};
+
 export default apiClient;
