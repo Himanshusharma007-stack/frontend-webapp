@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from 'react-router-dom'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -14,7 +15,7 @@ export default function Navbar() {
     <div className="relative w-full ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
-          <button className="font-bold">Sahyog Sabka</button>
+          <Link className="font-bold" to='/'>Sahyog Sabka</Link>
         </div>
         <div className="hidden lg:block">
           <button
