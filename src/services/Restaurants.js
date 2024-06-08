@@ -22,7 +22,7 @@ export const getRestaurants = async () => {
 
 export const getRestaurantsMenuById = async (id) => {
   try {
-    const response = await apiClient.get(`/restaurantMenu/${id}`);
+    const response = await apiClient.get(`/restaurant/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
