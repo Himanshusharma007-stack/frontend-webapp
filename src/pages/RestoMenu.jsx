@@ -3,6 +3,8 @@ import { getRestaurantsMenuById } from "../services/Restaurants";
 import { useState, useEffect } from "react";
 import MenuCard from "../components/MenuCard";
 import { useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { add, increament, decreament } from "../features/cart/cartSlice";
 
 export default function RestoMenu() {
   const { id } = useParams();
@@ -13,6 +15,10 @@ export default function RestoMenu() {
 
   const location = useLocation();
   const { data } = location.state || {};
+
+  // store
+  const cart = useSelector((state) => state.cart.value);
+  const dispatch = useDispatch();
 
   async function getMenuByRestoId() {
     try {
@@ -42,6 +48,16 @@ export default function RestoMenu() {
     }
   }
 
+  function addClicked(item) {
+    dispatch(add(item));
+  }
+  function decreamentBtnClicked(item) {
+    dispatch(decreament(item));
+  }
+  function increamentBtnClicked(item) {
+    dispatch(increament(item));
+  }
+
   useEffect(() => {
     getMenuByRestoId();
   }, []);
@@ -58,17 +74,22 @@ export default function RestoMenu() {
         placeholder="Search for dishes"
         value={searchQuery}
         onChange={handleSearchChange}
-      ></input>
+      />
 
       {!filteredList.length ? (
-        <div className="mt-4">
+        <div className="p-4">
           No dish found, with the given title/description.
         </div>
       ) : (
         filteredList.map((elem, index) => {
           return (
-            <div>
-              <MenuCard item={elem} />
+            <div key={index}>
+              <MenuCard
+                item={cart.find((item) => item._id == elem._id) || elem}
+                addClicked={(item) => addClicked(item)}
+                decreamentBtnClicked={(item) => decreamentBtnClicked(item)}
+                increamentBtnClicked={(item) => increamentBtnClicked(item)}
+              />
               {index < filteredList.length - 1 && <hr />}
             </div>
           );
