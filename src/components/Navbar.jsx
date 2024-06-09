@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import CartIcon from "../assets/navbar/cart.png";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,6 +30,7 @@ export default function Navbar() {
               Login
             </button>
             <button className="relative ml-3">
+            <Link className="font-bold" to="/checkout">
               <img src={CartIcon} className="h-10 w-10" alt="Shopping Cart" />
               {cart?.length > 0 && (
                 <div>
@@ -39,6 +40,7 @@ export default function Navbar() {
                   </span>
                 </div>
               )}
+              </Link>
             </button>
           </div>
         </div>
@@ -55,6 +57,7 @@ export default function Navbar() {
                   </div>
                   <div className="-mr-2">
                     <button className="relative mx-4">
+                    <Link className="font-bold" to="/checkout">
                       <img
                         src={CartIcon}
                         className="h-7 w-7"
@@ -68,6 +71,7 @@ export default function Navbar() {
                           </span>
                         </div>
                       )}
+                      </Link>
                     </button>
                     <button
                       type="button"
