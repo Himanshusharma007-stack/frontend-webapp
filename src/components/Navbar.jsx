@@ -1,11 +1,12 @@
-"use client";
-
-import React from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
+import CartIcon from "../assets/navbar/cart.png";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const cart = useSelector((state) => state.cart.value);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -15,15 +16,31 @@ export default function Navbar() {
     <div className="relative w-full ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
-          <Link className="font-bold" to='/'>Sahyog Sabka</Link>
+          <Link className="font-bold" to="/">
+            Sahyog Sabka
+          </Link>
         </div>
+
         <div className="hidden lg:block">
-          <button
-            type="button"
-            className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-          >
-            Login
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="button"
+              className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+            >
+              Login
+            </button>
+            <button className="relative ml-3">
+              <img src={CartIcon} className="h-10 w-10" alt="Shopping Cart" />
+              {cart?.length > 0 && (
+                <div>
+                  <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span>
+                  <span className="absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium">
+                    {cart?.length}
+                  </span>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
@@ -37,6 +54,21 @@ export default function Navbar() {
                     <button className="font-bold">Sahyog Sabka</button>
                   </div>
                   <div className="-mr-2">
+                    <button className="relative mx-4">
+                      <img
+                        src={CartIcon}
+                        className="h-7 w-7"
+                        alt="Shopping Cart"
+                      />
+                      {cart?.length > 0 && (
+                        <div>
+                          <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span>
+                          <span className="absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium">
+                            {cart?.length}
+                          </span>
+                        </div>
+                      )}
+                    </button>
                     <button
                       type="button"
                       onClick={toggleMenu}
