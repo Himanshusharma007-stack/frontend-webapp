@@ -8,6 +8,7 @@ import Homepage from "./pages/Home.jsx";
 import ErrorPage from "./pages/Error.jsx";
 import Base from "./pages/Base.jsx";
 import RestoMenu from "./pages/RestoMenu.jsx";
+import Checkout from "./pages/Checkout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "restaurant/:id",
         element: <RestoMenu />,
+      },
+      {
+        path: "checkout",
+        element: <Checkout />,
       },
     ],
   },
