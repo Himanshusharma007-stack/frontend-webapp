@@ -6,6 +6,7 @@ import {
   decreament,
   deletefromCart,
 } from "../features/cart/cartSlice";
+import PaymentForm from "../components/PaymentForm";
 
 import Notification from "../components/Notification";
 import { getTotalAmount } from "../features/cart/cartSlice";
@@ -239,7 +240,7 @@ export default function Checkout() {
                         </div>
                       </div>
 
-                      <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
+                      {/* <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
                         <button
                           type="button"
                           className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
@@ -247,7 +248,8 @@ export default function Checkout() {
                         >
                           Make payment
                         </button>
-                      </div>
+                      </div> */}
+                      <PaymentForm amount={totalAmount} />
                     </div>
                   </form>
 
