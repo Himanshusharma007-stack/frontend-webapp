@@ -23,12 +23,14 @@ export default function Navbar() {
 
         <div className="hidden lg:block">
           <div className="flex justify-center">
+          <Link to='/signin'>
             <button
               type="button"
               className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
             >
-              Login
+              Login/Create Business
             </button>
+            </Link>
             <button className="relative ml-3">
             <Link className="font-bold" to="/checkout">
               <img src={CartIcon} className="h-10 w-10" alt="Shopping Cart" />
@@ -83,12 +85,14 @@ export default function Navbar() {
                     </button>
                   </div>
                 </div>
+                <Link to='/signin'>
                 <button
                   type="button"
                   className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
-                  Login
+                  Login/Create Business
                 </button>
+                </Link>
               </div>
             </div>
           </div>
