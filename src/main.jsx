@@ -9,6 +9,7 @@ import ErrorPage from "./pages/Error.jsx";
 import Base from "./pages/Base.jsx";
 import RestoMenu from "./pages/RestoMenu.jsx";
 import Checkout from "./pages/Checkout.jsx";
+import SignInPage from "./pages/SignIn.jsx";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
         path: "checkout",
         element: <Checkout />,
       },
+      {
+        path: 'signin',
+        element: <SignInPage />
+      }
     ],
   },
 ]);

@@ -55,7 +55,7 @@ const PaymentForm = (props) => {
     //     },
     //     "request": {}
     // }
-      alert(verifyResponse.data.message);
+      alert(verifyResponse.data);
     } catch (error) {
       console.error(error);
       alert("Payment verification failed");
