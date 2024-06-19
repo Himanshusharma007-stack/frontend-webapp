@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { loginRestaurant } from "../services/Restaurants";
-import { getRestaurants } from "../services/Restaurants";
+import { createRestaurant } from "../services/Restaurants";
 // import Notification from "../components/Notification";
 import Notification from "../components/Notification";
 import Spinner from "./Spinner";
@@ -13,29 +13,88 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
   const [loadingLogin, setLoadingLogin] = useState(false);
+  const [loadingSignup, setLoadingSignup] = useState(false);
+  const [storeName, setStoreName] = useState("");
+  const [storeAddress, setStoreAddress] = useState("");
+  const [storeMobile, setStoreMobile] = useState("");
+  const [storeEmail, setStoreEmail] = useState("");
+  const [storePassword, setStorePassword] = useState("");
+  const [notificationmsg, setNotificationmsg] = useState(null);
 
   const updateUserState = () => {
     setAlreadyUser((prevState) => !prevState);
   };
 
-  async function LogIn() {
+  function resetFormData() {
+    setUserid("");
+    setPassword("");
+    setErrorMsg(null);
+    setStoreName("");
+    setStoreAddress("");
+    setStoreMobile("");
+    setStoreEmail("");
+    setStorePassword("");
+  }
+
+  async function HandleLogIn() {
     try {
       setLoadingLogin(true);
       let res = await loginRestaurant({ restaurantId: userid, password });
+      console.log('res ------- ',res);
+      if (res.success) {
+        localStorage.setItem("token", res.token); // Store token in localStorage
+        console.log("Login successfully");
+        setNotificationmsg('Login successfully.')
+        resetFormData();
+      }
     } catch (error) {
       console.log("error ---- ", error.message);
       setErrorMsg(error.message);
-      setTimeout(() => {
-        setErrorMsg(null);
-      }, 2000);
       throw new Error(error);
     } finally {
       setLoadingLogin(false);
+      setTimeout(() => {
+        setErrorMsg(null);
+        setNotificationmsg(null);
+      }, 2000);
+    }
+  }
+
+  async function HandleSignUp() {
+    try {
+      setLoadingSignup(true);
+      let res = await createRestaurant({
+        name: storeName,
+        address: storeAddress,
+        mobile: storeMobile,
+        email: storeEmail,
+        password: storePassword,
+      });
+
+      if (res.success) {
+        setAlreadyUser(true);
+        resetFormData();
+        setNotificationmsg("Restaurant created successfully.");
+      }
+    } catch (error) {
+      console.log("Error ---- ", error.message);
+      throw new Error(error);
+    } finally {
+      setLoadingSignup(false);
+      setTimeout(() => {
+        setNotificationmsg(null);
+      }, 2000);
     }
   }
 
   return (
     <section>
+      {notificationmsg && (
+        <Notification
+          msg={notificationmsg}
+          close={() => setNotificationmsg(null)}
+        />
+      )}
       {alreadyUser ? (
         // Login form
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
@@ -102,7 +161,7 @@ export default function SignIn() {
                   <button
                     type="button"
                     className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
-                    onClick={() => LogIn()}
+                    onClick={() => HandleLogIn()}
                   >
                     {loadingLogin ? (
                       <Spinner />
@@ -117,7 +176,7 @@ export default function SignIn() {
                     <Notification
                       msg={errorMsg}
                       error={true}
-                      close={() => setMakepayment(false)}
+                      close={() => setErrorMsg(null)}
                     />
                   )}
                 </div>
@@ -126,7 +185,6 @@ export default function SignIn() {
           </div>
         </div>
       ) : (
-        // Signup form
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             <h2 className="text-center text-2xl font-bold leading-tight text-black">
@@ -159,6 +217,8 @@ export default function SignIn() {
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       placeholder="Example: Sam's Pizza"
+                      onChange={(e) => setStoreName(e.target.value)}
+                      value={storeName}
                     ></input>
                   </div>
                 </div>
@@ -175,6 +235,8 @@ export default function SignIn() {
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       placeholder="Enter your address here"
+                      onChange={(e) => setStoreAddress(e.target.value)}
+                      value={storeAddress}
                     ></input>
                   </div>
                 </div>
@@ -193,6 +255,8 @@ export default function SignIn() {
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       placeholder="Example: 10 digits only (+91 not allowed)"
+                      onChange={(e) => setStoreMobile(e.target.value)}
+                      value={storeMobile}
                     ></input>
                   </div>
                 </div>
@@ -210,6 +274,28 @@ export default function SignIn() {
                     <input
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
+                      onChange={(e) => setStoreEmail(e.target.value)}
+                      value={storeEmail}
+                    ></input>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor=""
+                      className="text-base font-medium text-gray-900"
+                    >
+                      {" "}
+                      Password{" "}
+                    </label>
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                      type="text"
+                      placeholder="Contain a small / capital letter and no."
+                      onChange={(e) => setStorePassword(e.target.value)}
+                      value={storePassword}
                     ></input>
                   </div>
                 </div>
@@ -217,8 +303,9 @@ export default function SignIn() {
                   <button
                     type="button"
                     className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
+                    onClick={() => HandleSignUp()}
                   >
-                    Sign up
+                    {loadingSignup ? <Spinner /> : <>Sign up</>}
                   </button>
                 </div>
               </div>
