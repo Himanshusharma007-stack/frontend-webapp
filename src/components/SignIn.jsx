@@ -1,13 +1,38 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
+import { loginRestaurant } from "../services/Restaurants";
+import { getRestaurants } from "../services/Restaurants";
+// import Notification from "../components/Notification";
+import Notification from "../components/Notification";
+import Spinner from "./Spinner";
 
 export default function SignIn() {
   const [alreadyUser, setAlreadyUser] = useState(true);
+  const [userid, setUserid] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [loadingLogin, setLoadingLogin] = useState(false);
 
   const updateUserState = () => {
     setAlreadyUser((prevState) => !prevState);
   };
+
+  async function LogIn() {
+    try {
+      setLoadingLogin(true);
+      let res = await loginRestaurant({ restaurantId: userid, password });
+    } catch (error) {
+      console.log("error ---- ", error.message);
+      setErrorMsg(error.message);
+      setTimeout(() => {
+        setErrorMsg(null);
+      }, 2000);
+      throw new Error(error);
+    } finally {
+      setLoadingLogin(false);
+    }
+  }
 
   return (
     <section>
@@ -44,6 +69,8 @@ export default function SignIn() {
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       placeholder="Enter your unique userid"
+                      onChange={(e) => setUserid(e.target.value)}
+                      value={userid}
                     ></input>
                   </div>
                 </div>
@@ -66,6 +93,8 @@ export default function SignIn() {
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
                       placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     ></input>
                   </div>
                 </div>
@@ -73,9 +102,24 @@ export default function SignIn() {
                   <button
                     type="button"
                     className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
+                    onClick={() => LogIn()}
                   >
-                    Get started <ArrowRight className="ml-2" size={16} />
+                    {loadingLogin ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        Get started <ArrowRight className="ml-2" size={16} />
+                      </>
+                    )}
                   </button>
+
+                  {errorMsg && (
+                    <Notification
+                      msg={errorMsg}
+                      error={true}
+                      close={() => setMakepayment(false)}
+                    />
+                  )}
                 </div>
               </div>
             </form>

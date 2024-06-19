@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         element: <Checkout />,
       },
       {
-        path: 'signin',
+        path: 'restaurant/login-or-signup',
         element: <SignInPage />
       }
     ],

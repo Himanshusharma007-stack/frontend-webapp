@@ -23,7 +23,7 @@ export default function Navbar() {
 
         <div className="hidden lg:block">
           <div className="flex justify-center">
-          <Link to='/signin'>
+          <Link to='restaurant/login-or-signup'>
             <button
               type="button"
               className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
@@ -85,7 +85,7 @@ export default function Navbar() {
                     </button>
                   </div>
                 </div>
-                <Link to='/signin'>
+                <Link to='restaurant/login-or-signup'>
                 <button
                   type="button"
                   className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
