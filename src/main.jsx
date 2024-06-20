@@ -12,6 +12,7 @@ import Checkout from "./pages/Checkout.jsx";
 import SignInPage from "./pages/SignIn.jsx";
 // import RestaurantItems from "./pages/restaurantItems.jsx";
 import RestaurantItems from "./pages/RestaurantItems.jsx";
+import { ThemeProvider } from "@material-tailwind/react";
 
 const router = createBrowserRouter([
   {
@@ -45,8 +46,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <ThemeProvider>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
+    </ThemeProvider >
   </React.StrictMode>
 );

@@ -1,16 +1,10 @@
+import { Button } from "@material-tailwind/react";
+import { Table } from "../components/Table";
+
 export default function RestaurantItems() {
   return (
     <>
-      <div>Restaurant item page</div>
+      <Table />
     </>
   );
 }
-
-
-
-
-// import SignIn from "../components/SignIn"
-
-// export default function SignInPage() {
-//     return <SignIn/>
-// }
