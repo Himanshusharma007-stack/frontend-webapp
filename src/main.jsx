@@ -10,6 +10,8 @@ import Base from "./pages/Base.jsx";
 import RestoMenu from "./pages/RestoMenu.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import SignInPage from "./pages/SignIn.jsx";
+// import RestaurantItems from "./pages/restaurantItems.jsx";
+import RestaurantItems from "./pages/RestaurantItems.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +33,12 @@ const router = createBrowserRouter([
       },
       {
         path: 'restaurant/login-or-signup',
-        element: <SignInPage />
-      }
+        element: <SignInPage />,
+      },
+      {
+        path: 'restaurant/items-list',
+        element: <RestaurantItems />
+      },
     ],
   },
 ]);

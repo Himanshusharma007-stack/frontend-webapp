@@ -40,11 +40,11 @@ export default function SignIn() {
     try {
       setLoadingLogin(true);
       let res = await loginRestaurant({ restaurantId: userid, password });
-      console.log('res ------- ',res);
+      console.log("res ------- ", res);
       if (res.success) {
         localStorage.setItem("token", res.token); // Store token in localStorage
         console.log("Login successfully");
-        setNotificationmsg('Login successfully.')
+        setNotificationmsg("Login successfully.");
         resetFormData();
       }
     } catch (error) {
@@ -78,10 +78,12 @@ export default function SignIn() {
       }
     } catch (error) {
       console.log("Error ---- ", error.message);
+      setErrorMsg(error.message);
       throw new Error(error);
     } finally {
       setLoadingSignup(false);
       setTimeout(() => {
+        setErrorMsg(null);
         setNotificationmsg(null);
       }, 2000);
     }
@@ -307,6 +309,14 @@ export default function SignIn() {
                   >
                     {loadingSignup ? <Spinner /> : <>Sign up</>}
                   </button>
+
+                  {errorMsg && (
+                    <Notification
+                      msg={errorMsg}
+                      error={true}
+                      close={() => setErrorMsg(null)}
+                    />
+                  )}
                 </div>
               </div>
             </form>
