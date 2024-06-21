@@ -1,36 +1,10 @@
 import { Card, Typography } from "@material-tailwind/react";
- 
-const TABLE_HEAD = ["Name", "Job", "Employed", ""];
- 
-const TABLE_ROWS = [
-  {
-    name: "John Michael",
-    job: "Manager",
-    date: "23/04/18",
-  },
-  {
-    name: "Alexa Liras",
-    job: "Developer",
-    date: "23/04/18",
-  },
-  {
-    name: "Laurent Perrier",
-    job: "Executive",
-    date: "19/09/17",
-  },
-  {
-    name: "Michael Levi",
-    job: "Developer",
-    date: "24/12/08",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-];
- 
-export function Table() {
+import { Pencil } from "lucide-react";
+
+const TABLE_HEAD = ["Name", "Description", "Price", "Action"];
+
+export function Table(props) {
+
   return (
     <Card className="h-full w-full overflow-scroll">
       <table className="w-full min-w-max table-auto text-left">
@@ -47,17 +21,16 @@ export function Table() {
                   className="font-normal leading-none opacity-70"
                 >
                   {head}
-                  
                 </Typography>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {TABLE_ROWS.map(({ name, job, date }, index) => {
-            const isLast = index === TABLE_ROWS.length - 1;
+          {props.data.map(({ name, description: desc, price }, index) => {
+            const isLast = index === props.data.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
- 
+
             return (
               <tr key={name}>
                 <td className={classes}>
@@ -75,7 +48,7 @@ export function Table() {
                     color="blue-gray"
                     className="font-normal"
                   >
-                    {job}
+                    {desc}
                   </Typography>
                 </td>
                 <td className={classes}>
@@ -84,7 +57,7 @@ export function Table() {
                     color="blue-gray"
                     className="font-normal"
                   >
-                    {date}
+                    {price}
                   </Typography>
                 </td>
                 <td className={classes}>
@@ -93,9 +66,9 @@ export function Table() {
                     href="#"
                     variant="small"
                     color="blue-gray"
-                    className="font-medium"
+                    className="font-medium w-4"
                   >
-                    Edit
+                    <Pencil className="h-4" />
                   </Typography>
                 </td>
               </tr>

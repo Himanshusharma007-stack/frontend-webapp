@@ -6,6 +6,8 @@ import { createRestaurant } from "../services/Restaurants";
 // import Notification from "../components/Notification";
 import Notification from "../components/Notification";
 import Spinner from "./Spinner";
+import { useNavigate } from "react-router-dom";
+import localStorageFunctions from '../utils/localStorageFunctions.js'
 
 export default function SignIn() {
   const [alreadyUser, setAlreadyUser] = useState(true);
@@ -20,6 +22,7 @@ export default function SignIn() {
   const [storeEmail, setStoreEmail] = useState("");
   const [storePassword, setStorePassword] = useState("");
   const [notificationmsg, setNotificationmsg] = useState(null);
+  const navigate = useNavigate();
 
   const updateUserState = () => {
     setAlreadyUser((prevState) => !prevState);
@@ -42,9 +45,15 @@ export default function SignIn() {
       let res = await loginRestaurant({ restaurantId: userid, password });
       console.log("res ------- ", res);
       if (res.success) {
-        localStorage.setItem("token", res.token); // Store token in localStorage
+        localStorageFunctions.saveInLocalstorage('token', res.token)
+        localStorageFunctions.saveInLocalstorage('token', res.data)
+        // localStorage.setItem("token", res.token); // Store token in localStorage
+        // localStorage.setItem('data', JSON.stringify(res.data))
         console.log("Login successfully");
         setNotificationmsg("Login successfully.");
+        if (res.data) {
+          navigate("/restaurant/items-list", { state: { data: res.data } });
+        }
         resetFormData();
       }
     } catch (error) {
