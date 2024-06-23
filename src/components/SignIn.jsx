@@ -46,9 +46,7 @@ export default function SignIn() {
       console.log("res ------- ", res);
       if (res.success) {
         localStorageFunctions.saveInLocalstorage('token', res.token)
-        localStorageFunctions.saveInLocalstorage('token', res.data)
-        // localStorage.setItem("token", res.token); // Store token in localStorage
-        // localStorage.setItem('data', JSON.stringify(res.data))
+        localStorageFunctions.saveInLocalstorage('data', res.data)
         console.log("Login successfully");
         setNotificationmsg("Login successfully.");
         if (res.data) {
