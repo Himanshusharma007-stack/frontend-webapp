@@ -3,8 +3,12 @@ function saveInLocalstorage(key, data) {
 }
 
 function getDatafromLocalstorage(key) {
-  let data = localStorage.getItem(key);
+  let data = localStorage.getItem(key) || null;
   return JSON.parse(data);
 }
 
-export default { saveInLocalstorage, getDatafromLocalstorage };
+function removeDatafromLocalstorage(key) {
+  localStorage.removeItem(key);
+}
+
+export default { saveInLocalstorage, getDatafromLocalstorage, removeDatafromLocalstorage };
