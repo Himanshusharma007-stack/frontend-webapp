@@ -1,4 +1,3 @@
-import { Button } from "@material-tailwind/react";
 import { Table } from "../components/Table";
 import { useLocation } from "react-router-dom";
 import { getRestaurantsMenuById } from "../services/Restaurants";
@@ -9,7 +8,7 @@ import localStorageFunctions from "../utils/localStorageFunctions.js";
 
 export default function RestaurantItems() {
   const location = useLocation();
-  const { data } = location.state || {}; // destructuring state object
+  const [data, setData] = useState({});
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
@@ -17,9 +16,11 @@ export default function RestaurantItems() {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const storedToken = localStorageFunctions.getDatafromLocalstorage('token')
+    const storedToken = localStorageFunctions.getDatafromLocalstorage("token");
     if (storedToken) {
       setToken(storedToken);
+    } else {
+      redirectToLogin();
     }
   }, []); // Run once on mount to get the token
 
@@ -30,7 +31,7 @@ export default function RestaurantItems() {
       setMenuItems(res?.data);
       setFilteredList(res?.data);
     } catch (error) {
-      throw new Error(error);
+      console.error("Error fetching menu:", error);
     } finally {
       setLoading(false);
     }
@@ -43,33 +44,40 @@ export default function RestaurantItems() {
   }
 
   async function checkUserIsAuthenticated() {
-    console.log("call checkUserIsAuthenticated");
     try {
       let res = await isUserAuthenticated();
-      console.log("res ------- ", res);
       if (!res.success) redirectToLogin();
     } catch (error) {
       console.log("error --------------- ", error);
       redirectToLogin();
-      throw new Error(error);
     }
   }
 
   useEffect(() => {
     if (token) {
-      console.log('Token exists: ', token);
+      console.log("Token exists: ", token);
       checkUserIsAuthenticated();
     }
   }, [token]);
 
   useEffect(() => {
-    getMenuByRestoId();
+    if (data?._id) {
+      getMenuByRestoId();
+    }
+  }, [data]);
+
+  useEffect(() => {
+    let dataValue =
+      localStorageFunctions.getDatafromLocalstorage("data") ||
+      location.state?.data ||
+      {};
+    setData(dataValue);
   }, []);
 
   return (
     <>
       <div className="text-center mb-4">
-        <h1 className="text-xl font-bold">{data.name}</h1>
+        <h1 className="text-xl font-bold">{data?.name}</h1>
         <p className="text-lg font-light">{data?.address}</p>
       </div>
       <div className="md:w-[60rem]">

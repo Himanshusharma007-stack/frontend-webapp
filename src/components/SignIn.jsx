@@ -3,11 +3,11 @@ import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { loginRestaurant } from "../services/Restaurants";
 import { createRestaurant } from "../services/Restaurants";
-// import Notification from "../components/Notification";
 import Notification from "../components/Notification";
 import Spinner from "./Spinner";
 import { useNavigate } from "react-router-dom";
-import localStorageFunctions from '../utils/localStorageFunctions.js'
+import localStorageFunctions from "../utils/localStorageFunctions.js";
+import { isUserAuthenticated } from "../services/Auth";
 
 export default function SignIn() {
   const [alreadyUser, setAlreadyUser] = useState(true);
@@ -23,6 +23,14 @@ export default function SignIn() {
   const [storePassword, setStorePassword] = useState("");
   const [notificationmsg, setNotificationmsg] = useState(null);
   const navigate = useNavigate();
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const storedToken = localStorageFunctions.getDatafromLocalstorage("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []); // Run once on mount to get the token
 
   const updateUserState = () => {
     setAlreadyUser((prevState) => !prevState);
@@ -45,19 +53,20 @@ export default function SignIn() {
       let res = await loginRestaurant({ restaurantId: userid, password });
       console.log("res ------- ", res);
       if (res.success) {
-        localStorageFunctions.saveInLocalstorage('token', res.token)
-        localStorageFunctions.saveInLocalstorage('data', res.data)
+        localStorageFunctions.saveInLocalstorage("token", res.token);
+        localStorageFunctions.saveInLocalstorage("data", res.data);
         console.log("Login successfully");
         setNotificationmsg("Login successfully.");
         if (res.data) {
           navigate("/restaurant/items-list", { state: { data: res.data } });
         }
         resetFormData();
+      } else {
+        setErrorMsg(res.message || "Login failed. Please try again.");
       }
     } catch (error) {
       console.log("error ---- ", error.message);
-      setErrorMsg(error.message);
-      throw new Error(error);
+      setErrorMsg(error.message || "An error occurred during login.");
     } finally {
       setLoadingLogin(false);
       setTimeout(() => {
@@ -95,6 +104,30 @@ export default function SignIn() {
       }, 2000);
     }
   }
+
+  function redirectToRestaurantList() {
+    navigate("/restaurant/items-list");
+  }
+
+  function redirectToLogin() {
+    navigate("/restaurant/login-or-signup");
+    localStorageFunctions.removeDatafromLocalstorage("token");
+    localStorageFunctions.removeDatafromLocalstorage("data");
+  }
+
+  async function checkUserIsAuthenticated() {
+    try {
+      let res = await isUserAuthenticated();
+      if (res.success) redirectToRestaurantList();
+    } catch (error) {
+      console.log("error --------------- ", error);
+      redirectToLogin();
+    }
+  }
+
+  useEffect(() => {
+    checkUserIsAuthenticated();
+  }, []);
 
   return (
     <section>
