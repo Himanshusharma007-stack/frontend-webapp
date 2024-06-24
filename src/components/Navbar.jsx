@@ -4,15 +4,24 @@ import { Link } from "react-router-dom";
 import CartIcon from "../assets/navbar/cart.png";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import localStorageFunctions from "../utils/localStorageFunctions.js";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const cart = useSelector((state) => state.cart.value);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  function logoutClicked() {
+    navigate("/restaurant/login-or-signup");
+    localStorageFunctions.removeDatafromLocalstorage("token");
+    localStorageFunctions.removeDatafromLocalstorage("data");
+  }
 
   return (
     <div className="relative w-full ">
@@ -25,7 +34,7 @@ export default function Navbar() {
 
         <div className="hidden lg:block">
           <div className="flex justify-center">
-            {location.pathname != "/restaurant/items-list" && (
+            {location.pathname != "/restaurant/items-list" ? (
               <>
                 <Link to="restaurant/login-or-signup">
                   <button
@@ -51,6 +60,16 @@ export default function Navbar() {
                       </div>
                     )}
                   </Link>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  onClick={logoutClicked}
+                >
+                  Logout
                 </button>
               </>
             )}
@@ -97,7 +116,7 @@ export default function Navbar() {
                     </button>
                   </div>
                 </div>
-                {location.pathname != "/restaurant/items-list" && (
+                {location.pathname != "/restaurant/items-list" ? (
                   <Link to="restaurant/login-or-signup">
                     <button
                       type="button"
@@ -106,6 +125,16 @@ export default function Navbar() {
                       Login/Create Business
                     </button>
                   </Link>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                      onClick={logoutClicked}
+                    >
+                      Logout
+                    </button>
+                  </>
                 )}
               </div>
             </div>
