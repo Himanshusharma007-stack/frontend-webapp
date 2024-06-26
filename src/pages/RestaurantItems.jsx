@@ -55,7 +55,7 @@ export default function RestaurantItems() {
 
   useEffect(() => {
     if (token) {
-      console.log("Token exists: ", token);
+      // console.log("Token exists: ", token);
       checkUserIsAuthenticated();
     }
   }, [token]);
