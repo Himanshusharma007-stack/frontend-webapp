@@ -74,21 +74,21 @@ export function DialogBox(props) {
     console.log("obj ---------- ", obj);
 
     try {
-      // setIsLoading(true);
-      // if (props.data) {
-      //   obj._id = props.data._id;
-      //   let res = await updateFoodItem(obj);
-      //   if (res.success) {
-      //     setOpen(false); // Close the dialog on successful submission
-      //     props.getMenuByRestoId();
-      //   }
-      // } else {
-      //   let res = await createFoodItem(obj);
-      //   if (res.success) {
-      //     setOpen(false); // Close the dialog on successful submission
-      //     props.getMenuByRestoId();
-      //   }
-      // }
+      setIsLoading(true);
+      if (props.data) {
+        obj._id = props.data._id;
+        let res = await updateFoodItem(obj);
+        if (res.success) {
+          setOpen(false); // Close the dialog on successful submission
+          props.getMenuByRestoId();
+        }
+      } else {
+        let res = await createFoodItem(obj);
+        if (res.success) {
+          setOpen(false); // Close the dialog on successful submission
+          props.getMenuByRestoId();
+        }
+      }
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -131,13 +131,13 @@ export function DialogBox(props) {
   React.useEffect(() => {
     if (open) {
       setFormData({
-        name: props.data?.name,
-        description: props.data?.description,
-        price: props.data?.price,
-        size: props.data?.size,
-        category: props.data?.category, // Storing the entire category object
-        isVeg: props.data?.isVeg,
-        inStock: props.data?.inStock,
+        name: props.data?.name || "",
+        description: props.data?.description || "",
+        price: props.data?.price || "",
+        size: props.data?.size || null,
+        category: props.data?.category || null, // Storing the entire category object
+        isVeg: props.data?.isVeg || true,
+        inStock: props.data?.inStock || true,
       });
     } else {
       setFormData({
@@ -150,7 +150,7 @@ export function DialogBox(props) {
         inStock: true,
       });
     }
-  }, [open]);
+  }, [open, props.data]);
 
   return (
     <>

@@ -1,5 +1,4 @@
 import { Card, Typography, Button } from "@material-tailwind/react";
-import { Pencil } from "lucide-react";
 import { DialogBox } from "../components/Dialog";
 import { RotateCw } from "lucide-react";
 const TABLE_HEAD = ["Name / Price (in ₹)", "Description", "In Stock", "Action"];
@@ -71,6 +70,15 @@ export function Table(props) {
                       {inStock ? 'Yes': 'No'}
                     </Typography>
                   </td>
+                  {/* <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className={isVeg? 'text-green-500 font-bold' : 'text-slate-400 font-bold'}
+                    >
+                      {isVeg ? 'Yes': 'No'}
+                    </Typography>
+                  </td> */}
                   <td className={classes}>
                     <Typography
                       as="a"
