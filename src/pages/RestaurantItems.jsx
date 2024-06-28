@@ -81,7 +81,7 @@ export default function RestaurantItems() {
         <p className="text-lg font-light">{data?.address}</p>
       </div>
       <div className="md:w-[60rem]">
-        <Table data={menuItems} />
+        <Table data={menuItems} getMenuByRestoId={() => getMenuByRestoId()}  />
       </div>
     </>
   );

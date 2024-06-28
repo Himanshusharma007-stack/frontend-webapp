@@ -1,6 +1,7 @@
-import { Card, Typography } from "@material-tailwind/react";
+import { Card, Typography, Button } from "@material-tailwind/react";
 import { Pencil } from "lucide-react";
-import { DialogBox } from '../components/Dialog'
+import { DialogBox } from "../components/Dialog";
+import { RotateCw } from "lucide-react";
 
 const TABLE_HEAD = ["Name", "Description", "Price", "Action"];
 
@@ -8,7 +9,10 @@ export function Table(props) {
   return (
     <>
       <div className="flex justify-end mb-4">
-          <DialogBox />
+        <button className="mx-5" onClick={props.getMenuByRestoId}>
+          <RotateCw />
+        </button>
+        <DialogBox getMenuByRestoId={props.getMenuByRestoId} />
       </div>
       <Card className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">

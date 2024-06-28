@@ -21,4 +21,14 @@ export const createFoodItem = async (obj) => {
   }
 };
 
+export const getCategories = async () => {
+  try {
+    const {data} = await apiClient.get('/foodItem/categories')
+    return data || []
+  } catch (error) {
+    console.error("Error fetching restaurants:", error);
+    throw error.response.data;
+  }
+}
+
 export default apiClient;
