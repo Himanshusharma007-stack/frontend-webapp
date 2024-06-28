@@ -21,6 +21,16 @@ export const createFoodItem = async (obj) => {
   }
 };
 
+export const updateFoodItem = async (obj) => {
+  try {
+    const response = await apiClient.post("/foodItem/update", obj);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching restaurants:", error);
+    throw error.response.data;
+  }
+};
+
 export const getCategories = async () => {
   try {
     const {data} = await apiClient.get('/foodItem/categories')

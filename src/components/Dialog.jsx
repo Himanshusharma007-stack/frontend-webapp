@@ -9,7 +9,12 @@ import {
   Switch,
 } from "@material-tailwind/react";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
-import { createFoodItem, getCategories } from "../services/FoodItems.js";
+import {
+  createFoodItem,
+  getCategories,
+  updateFoodItem,
+} from "../services/FoodItems.js";
+import { Pencil } from "lucide-react";
 
 export function DialogBox(props) {
   const [open, setOpen] = React.useState(false);
@@ -53,7 +58,7 @@ export function DialogBox(props) {
     return newErrors;
   };
 
-  async function addBtnClicked() {
+  async function addOrUpdateBtnClicked() {
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -66,17 +71,28 @@ export function DialogBox(props) {
       restaurant: { ...data },
     };
 
+    console.log("obj ---------- ", obj);
+
     try {
-      setIsLoading(true)
-      let res = await createFoodItem(obj);
-      if (res.success) {
-        setOpen(false); // Close the dialog on successful submission
-        props.getMenuByRestoId()
-      }
+      // setIsLoading(true);
+      // if (props.data) {
+      //   obj._id = props.data._id;
+      //   let res = await updateFoodItem(obj);
+      //   if (res.success) {
+      //     setOpen(false); // Close the dialog on successful submission
+      //     props.getMenuByRestoId();
+      //   }
+      // } else {
+      //   let res = await createFoodItem(obj);
+      //   if (res.success) {
+      //     setOpen(false); // Close the dialog on successful submission
+      //     props.getMenuByRestoId();
+      //   }
+      // }
     } catch (error) {
       console.error("Error:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -112,13 +128,44 @@ export function DialogBox(props) {
     }));
   };
 
+  React.useEffect(() => {
+    if (open) {
+      setFormData({
+        name: props.data?.name,
+        description: props.data?.description,
+        price: props.data?.price,
+        size: props.data?.size,
+        category: props.data?.category, // Storing the entire category object
+        isVeg: props.data?.isVeg,
+        inStock: props.data?.inStock,
+      });
+    } else {
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        size: null,
+        category: null, // Storing the entire category object
+        isVeg: true,
+        inStock: true,
+      });
+    }
+  }, [open]);
+
   return (
     <>
-      <Button onClick={handleOpen} variant="gradient">
-        + Add Item
-      </Button>
-      <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Add Item</DialogHeader>
+      {props?.data ? (
+        <Pencil className="h-4" onClick={handleOpen} />
+      ) : (
+        <Button onClick={handleOpen} variant="gradient">
+          + Add Item
+        </Button>
+      )}
+
+      <Dialog open={open}>
+        <DialogHeader>
+          {props?.data ? <span>Edit Item</span> : <span>Add Item</span>}
+        </DialogHeader>
         <DialogBody>
           <div className="grid grid-cols-2 gap-3">
             {["name", "description", "price"].map((field) => (
@@ -139,11 +186,13 @@ export function DialogBox(props) {
             <div className="relative min-w-[200px]">
               <select
                 className="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                value={formData.size || ''}
+                value={formData.size || ""}
                 onChange={handleChange}
                 name="size"
               >
-                <option value="" disabled>Select Size</option>
+                <option value="" disabled>
+                  Select Size
+                </option>
                 <option value="small-7'">Small 7'</option>
                 <option value="medium-10'">Medium 10'</option>
                 <option value="large-12'">Large 12'</option>
@@ -160,7 +209,9 @@ export function DialogBox(props) {
                 onChange={handleChange}
                 name="category"
               >
-                <option value="" disabled>Select Category</option>
+                <option value="" disabled>
+                  Select Category
+                </option>
                 {categoryData.map((category) => (
                   <option value={category._id} key={category._id}>
                     {category.name}
@@ -202,8 +253,13 @@ export function DialogBox(props) {
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="blue" onClick={addBtnClicked} loading={isLoading}>
-            <span>Add</span>
+          <Button
+            variant="gradient"
+            color="blue"
+            onClick={addOrUpdateBtnClicked}
+            loading={isLoading}
+          >
+            <span>{props?.data ? <span>Update</span> : <span>Add</span>}</span>
           </Button>
         </DialogFooter>
       </Dialog>

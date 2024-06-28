@@ -2,8 +2,7 @@ import { Card, Typography, Button } from "@material-tailwind/react";
 import { Pencil } from "lucide-react";
 import { DialogBox } from "../components/Dialog";
 import { RotateCw } from "lucide-react";
-
-const TABLE_HEAD = ["Name", "Description", "Price", "Action"];
+const TABLE_HEAD = ["Name / Price (in ₹)", "Description", "In Stock", "Action"];
 
 export function Table(props) {
   return (
@@ -35,7 +34,7 @@ export function Table(props) {
             </tr>
           </thead>
           <tbody>
-            {props.data.map(({ name, description: desc, price }, index) => {
+            {props.data.map(({ _id, name, description: desc, price, size, category, isVeg, inStock }, index) => {
               const isLast = index === props.data.length - 1;
               const classes = isLast
                 ? "p-4"
@@ -50,6 +49,8 @@ export function Table(props) {
                       className="font-normal"
                     >
                       {name}
+                      <br />
+                      {price}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -65,9 +66,9 @@ export function Table(props) {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal"
+                      className={inStock? 'text-green-500 font-bold' : 'text-slate-400 font-bold'}
                     >
-                      {price}
+                      {inStock ? 'Yes': 'No'}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -78,8 +79,10 @@ export function Table(props) {
                       color="blue-gray"
                       className="font-medium w-4"
                     >
-                      {/* <DialogBox /> */}
-                      <Pencil className="h-4" />
+                      {/* <Pencil className="h-4" /> */}
+                      <DialogBox
+                        getMenuByRestoId={props.getMenuByRestoId} data={{_id, name, description: desc, price, size, category, isVeg, inStock }}
+                      />
                     </Typography>
                   </td>
                 </tr>
