@@ -23,7 +23,7 @@ export function DialogBox(props) {
     description: "",
     price: "",
     size: null,
-    category: null, // Storing the entire category object
+    category: null,
     isVeg: true,
     inStock: true,
   });
@@ -51,8 +51,7 @@ export function DialogBox(props) {
   const validate = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
-    if (!formData.description)
-      newErrors.description = "Description is required";
+    if (!formData.description) newErrors.description = "Description is required";
     if (!formData.price) newErrors.price = "Price is required";
     else if (isNaN(formData.price)) newErrors.price = "Price must be a number";
     return newErrors;
@@ -70,8 +69,6 @@ export function DialogBox(props) {
       ...formData,
       restaurant: { ...data },
     };
-
-    console.log("obj ---------- ", obj);
 
     try {
       setIsLoading(true);
@@ -120,8 +117,8 @@ export function DialogBox(props) {
     }
   };
 
-  const handleSwitchChange = (e) => {
-    const { name, checked } = e.target;
+  const handleSwitchChange = (name) => (e) => {
+    const { checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: checked,
@@ -135,9 +132,9 @@ export function DialogBox(props) {
         description: props.data?.description || "",
         price: props.data?.price || "",
         size: props.data?.size || null,
-        category: props.data?.category || null, // Storing the entire category object
-        isVeg: props.data?.isVeg || true,
-        inStock: props.data?.inStock || true,
+        category: props.data?.category || null,
+        isVeg: props.data?.isVeg ?? true,
+        inStock: props.data?.inStock ?? true,
       });
     } else {
       setFormData({
@@ -145,7 +142,7 @@ export function DialogBox(props) {
         description: "",
         price: "",
         size: null,
-        category: null, // Storing the entire category object
+        category: null,
         isVeg: true,
         inStock: true,
       });
@@ -157,7 +154,7 @@ export function DialogBox(props) {
       {props?.data ? (
         <Pencil className="h-4" onClick={handleOpen} />
       ) : (
-        <Button onClick={handleOpen} variant="gradient" disabled={props.isLoading}>
+        <Button onClick={handleOpen} variant="gradient">
           + Add Item
         </Button>
       )}
@@ -224,19 +221,15 @@ export function DialogBox(props) {
             </div>
 
             {[
-              {
-                name: "isVeg",
-                label: "Is veg",
-                bgClass: "checked:bg-[#2ec946] bg-deep-orange-900",
-              },
-              { name: "inStock", label: "In stock" },
+              { name: "isVeg", label: "Is Veg", bgClass: "checked:bg-[#2ec946] bg-deep-orange-900" },
+              { name: "inStock", label: "In Stock" },
             ].map((switchField) => (
               <div key={switchField.name} className="space-x-8 mt-2">
                 <Switch
                   checked={formData[switchField.name]}
                   name={switchField.name}
                   label={switchField.label}
-                  onChange={handleSwitchChange}
+                  onChange={handleSwitchChange(switchField.name)}
                   ripple={true}
                   className={switchField.bgClass}
                 />
@@ -245,21 +238,11 @@ export function DialogBox(props) {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-          >
+          <Button variant="text" color="red" onClick={handleOpen} className="mr-1">
             <span>Cancel</span>
           </Button>
-          <Button
-            variant="gradient"
-            color="blue"
-            onClick={addOrUpdateBtnClicked}
-            loading={isLoading}
-          >
-            <span>{props?.data ? <span>Update</span> : <span>Add</span>}</span>
+          <Button variant="gradient" color="blue" onClick={addOrUpdateBtnClicked} loading={isLoading}>
+            <span>{props?.data ? "Update" : "Add"}</span>
           </Button>
         </DialogFooter>
       </Dialog>
