@@ -8,9 +8,9 @@ export function Table(props) {
     <>
       <div className="flex justify-end mb-4">
         <button className="mx-5" onClick={props.getMenuByRestoId}>
-          <RotateCw />
+          <RotateCw className={props.isLoading ? "animate-spin" : ""} />
         </button>
-        <DialogBox getMenuByRestoId={props.getMenuByRestoId} />
+        <DialogBox getMenuByRestoId={props.getMenuByRestoId} isLoading={props.isLoading} />
       </div>
       <Card className="h-full w-full overflow-scroll">
         <table className="w-full min-w-max table-auto text-left">
@@ -33,69 +33,87 @@ export function Table(props) {
             </tr>
           </thead>
           <tbody>
-            {props.data.map(({ _id, name, description: desc, price, size, category, isVeg, inStock }, index) => {
-              const isLast = index === props.data.length - 1;
-              const classes = isLast
-                ? "p-4"
-                : "p-4 border-b border-blue-gray-50";
+            {props.data.map(
+              (
+                {
+                  _id,
+                  name,
+                  description: desc,
+                  price,
+                  size,
+                  category,
+                  isVeg,
+                  inStock,
+                },
+                index
+              ) => {
+                const isLast = index === props.data.length - 1;
+                const classes = isLast
+                  ? "p-4"
+                  : "p-4 border-b border-blue-gray-50";
 
-              return (
-                <tr key={name}>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {name}
-                      <br />
-                      {price}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {desc}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className={inStock? 'text-green-500 font-bold' : 'text-slate-400 font-bold'}
-                    >
-                      {inStock ? 'Yes': 'No'}
-                    </Typography>
-                  </td>
-                  {/* <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className={isVeg? 'text-green-500 font-bold' : 'text-slate-400 font-bold'}
-                    >
-                      {isVeg ? 'Yes': 'No'}
-                    </Typography>
-                  </td> */}
-                  <td className={classes}>
-                    <Typography
-                      as="a"
-                      href="#"
-                      variant="small"
-                      color="blue-gray"
-                      className="font-medium w-4"
-                    >
-                      {/* <Pencil className="h-4" /> */}
-                      <DialogBox
-                        getMenuByRestoId={props.getMenuByRestoId} data={{_id, name, description: desc, price, size, category, isVeg, inStock }}
-                      />
-                    </Typography>
-                  </td>
-                </tr>
-              );
-            })}
+                return (
+                  <tr key={name}>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {name}
+                        <br />
+                        {price}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {desc}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className={
+                          inStock
+                            ? "text-green-500 font-bold"
+                            : "text-slate-400 font-bold"
+                        }
+                      >
+                        {inStock ? "Yes" : "No"}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        as="a"
+                        href="#"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-medium w-4"
+                      >
+                        <DialogBox
+                          getMenuByRestoId={props.getMenuByRestoId}
+                          data={{
+                            _id,
+                            name,
+                            description: desc,
+                            price,
+                            size,
+                            category,
+                            isVeg,
+                            inStock,
+                          }}
+                        />
+                      </Typography>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
       </Card>

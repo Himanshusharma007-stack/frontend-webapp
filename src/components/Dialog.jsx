@@ -157,7 +157,7 @@ export function DialogBox(props) {
       {props?.data ? (
         <Pencil className="h-4" onClick={handleOpen} />
       ) : (
-        <Button onClick={handleOpen} variant="gradient">
+        <Button onClick={handleOpen} variant="gradient" disabled={props.isLoading}>
           + Add Item
         </Button>
       )}
