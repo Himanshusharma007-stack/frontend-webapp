@@ -10,7 +10,7 @@ export default function RestaurantItems() {
   const location = useLocation();
   const [data, setData] = useState({});
   const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
   const [filteredList, setFilteredList] = useState([]);
   const navigate = useNavigate();
   const [token, setToken] = useState(null);
@@ -26,14 +26,14 @@ export default function RestaurantItems() {
 
   async function getMenuByRestoId() {
     try {
-      setLoading(true);
+      setIsloading(true);
       let res = await getRestaurantsMenuById(data._id);
       setMenuItems(res?.data);
       setFilteredList(res?.data);
     } catch (error) {
       console.error("Error fetching menu:", error);
     } finally {
-      setLoading(false);
+      setIsloading(false);
     }
   }
 
@@ -81,7 +81,7 @@ export default function RestaurantItems() {
         <p className="text-lg font-light">{data?.address}</p>
       </div>
       <div className="md:w-[60rem]">
-        <Table data={menuItems} getMenuByRestoId={() => getMenuByRestoId()}  />
+        <Table data={menuItems} getMenuByRestoId={() => getMenuByRestoId()} isLoading={isLoading} />
       </div>
     </>
   );
