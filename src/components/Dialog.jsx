@@ -31,19 +31,17 @@ export function DialogBox(props) {
   const [categoryData, setCategoryData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  async function getCategoryData() {
+  const getCategoryData = React.useCallback(async () => {
     try {
-      let { data } = await getCategories();
-      console.log("getCategoryData ======> ", data);
-      setCategoryData(data);
+      if (!categoryData.length) {
+        let { data } = await getCategories();
+        console.log("getCategoryData ======> ", data);
+        setCategoryData(data);
+      }
     } catch (error) {
       console.error("Error -------> ", error);
       throw new Error(error);
     }
-  }
-
-  React.useEffect(() => {
-    getCategoryData();
   }, []);
 
   const handleOpen = () => setOpen(!open);
@@ -136,6 +134,7 @@ export function DialogBox(props) {
         isVeg: props.data?.isVeg ?? true,
         inStock: props.data?.inStock ?? true,
       });
+      getCategoryData()
     } else {
       setFormData({
         name: "",
@@ -154,7 +153,7 @@ export function DialogBox(props) {
       {props?.data ? (
         <Pencil className="h-4" onClick={handleOpen} />
       ) : (
-        <Button onClick={handleOpen} variant="gradient">
+        <Button onClick={handleOpen} variant="gradient" disabled={props.isLoading}>
           + Add Item
         </Button>
       )}
