@@ -15,8 +15,9 @@ export default function Homepage() {
       try {
         setLoading(true);
         const response = await getRestaurants();
-        setRestaurantList(response.data);
-        setFilteredRestaurants(response.data);
+        let activeRestaurants = response?.data?.filter(resto => resto.isActive)
+        setRestaurantList(activeRestaurants);
+        setFilteredRestaurants(activeRestaurants);
       } catch (error) {
         console.error("Error --> ", error);
       } finally {
