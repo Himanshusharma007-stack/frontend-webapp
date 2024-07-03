@@ -104,6 +104,7 @@ export function DialogBox(props) {
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
+      console.log('file ------------------------ ', file);
       setFormData((prevData) => ({
         ...prevData,
         [name]: files[0], // Store the file in formData

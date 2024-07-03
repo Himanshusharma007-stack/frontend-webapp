@@ -74,9 +74,23 @@ export default function Checkout() {
                             id="name"
                           ></input>
                         </div>
+                        <div className="mt-4 w-full">
+                          <label
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            htmlFor="name"
+                          >
+                            Mobile
+                          </label>
+                          <input
+                            className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            type="text"
+                            placeholder="Enter your mobile"
+                            id="mobile"
+                          ></input>
+                        </div>
                       </div>
                       <hr className="my-8" />
-                      <div className="mt-10">
+                      {/* <div className="mt-10">
                         <h3 className="text-lg font-semibold text-gray-900">
                           Payment details
                         </h3>
@@ -134,11 +148,11 @@ export default function Checkout() {
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <hr className="my-8" />
+                      </div> */}
+                      {/* <hr className="my-8" /> */}
                       <div className="mt-10">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Shipping address
+                          Address
                         </h3>
 
                         <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3">
@@ -215,7 +229,7 @@ export default function Checkout() {
                           </div>
                         </div>
                       </div>
-                      <hr className="my-8" />
+                      {/* <hr className="my-8" />
                       <div className="mt-10">
                         <h3 className="text-lg font-semibold text-gray-900">
                           Billing information
@@ -238,7 +252,7 @@ export default function Checkout() {
                             </label>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
 
                       {/* <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
                         <button
