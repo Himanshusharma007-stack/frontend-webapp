@@ -13,6 +13,8 @@ import SignInPage from "./pages/SignIn.jsx";
 // import RestaurantItems from "./pages/restaurantItems.jsx";
 import RestaurantItems from "./pages/RestaurantItems.jsx";
 import { ThemeProvider } from "@material-tailwind/react";
+import { LoginSignupUser } from "./pages/LoginSignupUser.jsx";
+import { Auth0Provider } from '@auth0/auth0-react';
 
 const router = createBrowserRouter([
   {
@@ -40,16 +42,34 @@ const router = createBrowserRouter([
         path: 'restaurant/items-list',
         element: <RestaurantItems />
       },
+      {
+        path: 'user/login-or-signup',
+        element: <LoginSignupUser />
+      },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <Auth0Provider
+    domain={
+      import.meta.env.VITE_AUTH_DOMAIN || "dev-xehmosrod5wqrpnk.us.auth0.com"
+    }
+    clientId={
+      import.meta.env.VITE_AUTH_CLIENTID || "lPKaDSHQN0JKfeoVT44wckEk8qDnbxjG"
+    }
+    authorizationParams={{
+      redirect_uri:
+        import.meta.env.VITE_AUTH_LOGIN_URL ||
+        "https://himanshusharma007-stack.github.io/food-webapp/",
+    }}
+  >
     <ThemeProvider>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
     </ThemeProvider >
+    </Auth0Provider>
   </React.StrictMode>
 );

@@ -6,15 +6,25 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
+import DrawerComp from "./Drawer.jsx";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const cart = useSelector((state) => state.cart.value);
   const location = useLocation();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const openDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
   };
 
   function logoutClicked() {
@@ -24,27 +34,25 @@ export default function Navbar() {
   }
 
   return (
-    <div className="relative w-full ">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+    <div className="relative w-full">
+      <div className={`mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8 ${isDrawerOpen ? "blur-sm" : ""}`}>
         <div className="inline-flex items-center space-x-2">
-          <Link className="font-bold" to="/">
+          {/* <Link className="font-bold" to="/">
             Sahyog Sabka
-          </Link>
+          </Link> */}
+          <DrawerComp isOpen={isDrawerOpen} onClose={closeDrawer} />
         </div>
 
-        <div className="hidden lg:block">
+        <div className=" lg:block">
           <div className="flex justify-center">
-            {location.pathname != "/restaurant/items-list" ? (
+            {location.pathname !== "/restaurant/items-list" ? (
               <>
-                <Link to="restaurant/login-or-signup">
-                  <button
-                    type="button"
-                    className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                  >
-                    Login/Create Business
-                  </button>
-                </Link>
-                <button className="relative ml-3">
+              {/* <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span> */}
+              
+                {/* <button onClick={openDrawer} className="relative ml-3"> */}
+                  {cart?.length > 0 && 
+                  (
+                    <button className="relative ml-3">
                   <Link className="font-bold" to="/checkout">
                     <img
                       src={CartIcon}
@@ -61,25 +69,27 @@ export default function Navbar() {
                     )}
                   </Link>
                 </button>
+                  )}
+                {/* </button> */}
+                
               </>
             ) : (
-              <>
-                <button
-                  type="button"
-                  className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                  onClick={logoutClicked}
-                >
-                  Logout
-                </button>
-              </>
+              <button
+                type="button"
+                className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                onClick={logoutClicked}
+              >
+                Logout
+              </button>
             )}
           </div>
         </div>
-        <div className="lg:hidden">
-          <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
+        <div className="hidden">
+          {/* <Menu  className="h-6 w-6 cursor-pointer" /> */}
+          <DrawerComp isOpen={isDrawerOpen} onClose={closeDrawer} />
         </div>
         {isMenuOpen && (
-          <div className="absolute inset-x-0 top-0 z-50 origin-top-right transform p-2 transition lg:hidden">
+          <div className="absolute inset-x-0 top-0 z-100 origin-top-right transform p-2 transition lg:hidden">
             <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
               <div className="px-5 pb-6 pt-5">
                 <div className="flex items-center justify-between">
@@ -87,14 +97,10 @@ export default function Navbar() {
                     <button className="font-bold">Sahyog Sabka</button>
                   </div>
                   <div className="-mr-2">
-                    {location.pathname != "/restaurant/items-list" && (
+                    {location.pathname !== "/restaurant/items-list" && (
                       <button className="relative mx-4">
                         <Link className="font-bold" to="/checkout">
-                          <img
-                            src={CartIcon}
-                            className="h-7 w-7"
-                            alt="Shopping Cart"
-                          />
+                          {/* <img src={CartIcon} className="h-7 w-7" alt="Shopping Cart" /> */}
                           {cart?.length > 0 && (
                             <div>
                               <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span>
@@ -116,26 +122,20 @@ export default function Navbar() {
                     </button>
                   </div>
                 </div>
-                {location.pathname != "/restaurant/items-list" ? (
-                  <Link to="restaurant/login-or-signup">
-                    <button
-                      type="button"
-                      className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    >
-                      Login/Create Business
-                    </button>
-                  </Link>
+                {location.pathname !== "/restaurant/items-list" ? (
+                  <button onClick={openDrawer} className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
+                    Open Drawer
+                  </button>
                 ) : (
-                  <>
-                    <button
-                      type="button"
-                      className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                      onClick={logoutClicked}
-                    >
-                      Logout
-                    </button>
-                  </>
+                  <button
+                    type="button"
+                    className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    onClick={logoutClicked}
+                  >
+                    Logout
+                  </button>
                 )}
+                <DrawerComp isOpen={isDrawerOpen} onClose={closeDrawer} />
               </div>
             </div>
           </div>
