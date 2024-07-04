@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
 import DrawerComp from "./Drawer.jsx";
+import AvatarDropdown from "./Avatar.jsx";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,7 +36,11 @@ export default function Navbar() {
 
   return (
     <div className="relative w-full">
-      <div className={`mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8 ${isDrawerOpen ? "blur-sm" : ""}`}>
+      <div
+        className={`mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8 ${
+          isDrawerOpen ? "blur-sm" : ""
+        }`}
+      >
         <div className="inline-flex items-center space-x-2">
           {/* <Link className="font-bold" to="/">
             Sahyog Sabka
@@ -45,33 +50,28 @@ export default function Navbar() {
 
         <div className=" lg:block">
           <div className="flex justify-center">
+            <AvatarDropdown/>
             {location.pathname !== "/restaurant/items-list" ? (
               <>
-              {/* <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span> */}
-              
-                {/* <button onClick={openDrawer} className="relative ml-3"> */}
-                  {cart?.length > 0 && 
-                  (
-                    <button className="relative ml-3">
-                  <Link className="font-bold" to="/checkout">
-                    <img
-                      src={CartIcon}
-                      className="h-10 w-10"
-                      alt="Shopping Cart"
-                    />
-                    {cart?.length > 0 && (
-                      <div>
-                        <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span>
-                        <span className="absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium">
-                          {cart?.length}
-                        </span>
-                      </div>
-                    )}
-                  </Link>
-                </button>
-                  )}
-                {/* </button> */}
-                
+                {cart?.length > 0 && (
+                  <button className="relative ml-3">
+                    <Link className="font-bold" to="/checkout">
+                      <img
+                        src={CartIcon}
+                        className="h-10 w-10"
+                        alt="Shopping Cart"
+                      />
+                      {cart?.length > 0 && (
+                        <div>
+                          <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span>
+                          <span className="absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium">
+                            {cart?.length}
+                          </span>
+                        </div>
+                      )}
+                    </Link>
+                  </button>
+                )}
               </>
             ) : (
               <button
@@ -85,7 +85,6 @@ export default function Navbar() {
           </div>
         </div>
         <div className="hidden">
-          {/* <Menu  className="h-6 w-6 cursor-pointer" /> */}
           <DrawerComp isOpen={isDrawerOpen} onClose={closeDrawer} />
         </div>
         {isMenuOpen && (
@@ -100,7 +99,6 @@ export default function Navbar() {
                     {location.pathname !== "/restaurant/items-list" && (
                       <button className="relative mx-4">
                         <Link className="font-bold" to="/checkout">
-                          {/* <img src={CartIcon} className="h-7 w-7" alt="Shopping Cart" /> */}
                           {cart?.length > 0 && (
                             <div>
                               <span className="animate-ping absolute top-0 right-0 -mt-2 -mr-2 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-medium"></span>
@@ -123,7 +121,10 @@ export default function Navbar() {
                   </div>
                 </div>
                 {location.pathname !== "/restaurant/items-list" ? (
-                  <button onClick={openDrawer} className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
+                  <button
+                    onClick={openDrawer}
+                    className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  >
                     Open Drawer
                   </button>
                 ) : (
