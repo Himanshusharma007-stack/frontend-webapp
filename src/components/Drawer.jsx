@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Drawer,
   Button,
@@ -15,7 +15,30 @@ export default function DrawerComp() {
   const [open, setOpen] = React.useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect, user, isAuthenticated } = useAuth0();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const callApi = async () => {
+        try {
+          const response = await fetch('YOUR_API_ENDPOINT', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.sub}`,
+            },
+            body: JSON.stringify({ user }),
+          });
+          const data = await response.json();
+          console.log('API response:', data);
+        } catch (error) {
+          console.error('Error calling API:', error);
+        }
+      };
+
+      callApi();
+    }
+  }, [isAuthenticated, user]);
 
   return (
     <React.Fragment>
