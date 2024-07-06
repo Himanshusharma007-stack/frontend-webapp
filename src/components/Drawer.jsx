@@ -19,24 +19,27 @@ export default function DrawerComp() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const callApi = async () => {
+      const createOrupdateUser = async () => {
         try {
-          const response = await fetch('YOUR_API_ENDPOINT', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${user.sub}`,
-            },
-            body: JSON.stringify({ user }),
-          });
-          const data = await response.json();
-          console.log('API response:', data);
+          
+          // const response = await fetch('YOUR_API_ENDPOINT', {
+          //   method: 'POST',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //     Authorization: `Bearer ${user.sub}`,
+          //   },
+          //   body: JSON.stringify({ user }),
+          // });
+          // const data = await response.json();
+          // console.log('API response:', data);
+
+          console.log('user ------------------------- ',user);
         } catch (error) {
           console.error('Error calling API:', error);
         }
       };
 
-      callApi();
+      createOrupdateUser();
     }
   }, [isAuthenticated, user]);
 
@@ -70,7 +73,7 @@ export default function DrawerComp() {
         </div>
         <List>
           <ListItem>
-            <Link className="font-bold" onClick={() => loginWithRedirect()}>
+            <Link className="font-bold block" onClick={() => loginWithRedirect()}>
               Login/Signup User
             </Link>
           </ListItem>

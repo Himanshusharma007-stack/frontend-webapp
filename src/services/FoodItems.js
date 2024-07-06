@@ -1,19 +1,20 @@
-import axios from "axios";
+import apiService from './main'
+// import axios from "axios";
 
-// const API_BASE_URL = "https://backend-webapp-inky.vercel.app";
-const API_BASE_URL = "http://localhost:3000";
+// // const API_BASE_URL = "https://backend-webapp-inky.vercel.app";
+// const API_BASE_URL = "http://localhost:3000";
 
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+// const apiClient = axios.create({
+//   baseURL: API_BASE_URL,
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
 
 // Function to create foodItem
 export const createFoodItem = async (obj) => {
   try {
-    const response = await apiClient.post("/foodItem/create", obj);
+    const response = await apiService.apiClient.post("/foodItem/create", obj);
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
@@ -23,7 +24,7 @@ export const createFoodItem = async (obj) => {
 
 export const updateFoodItem = async (obj) => {
   try {
-    const response = await apiClient.post("/foodItem/update", obj);
+    const response = await apiService.apiClient.post("/foodItem/update", obj);
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
@@ -33,7 +34,7 @@ export const updateFoodItem = async (obj) => {
 
 export const getCategories = async () => {
   try {
-    const {data} = await apiClient.get('/foodItem/categories')
+    const {data} = await apiService.apiClient.get('/foodItem/categories')
     return data || []
   } catch (error) {
     console.error("Error fetching restaurants:", error);
@@ -41,4 +42,4 @@ export const getCategories = async () => {
   }
 }
 
-export default apiClient;
+// export default apiClient;
