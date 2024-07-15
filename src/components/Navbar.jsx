@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
 import DrawerComp from "./Drawer.jsx";
 import AvatarDropdown from "./Avatar.jsx";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function Navbar() {
   const cart = useSelector((state) => state.cart.value);
   const location = useLocation();
   const navigate = useNavigate();
+  const { loginWithRedirect } = useAuth0();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -50,7 +52,10 @@ export default function Navbar() {
 
         <div className=" lg:block">
           <div className="flex justify-center">
-            <AvatarDropdown/>
+            <Link className="font-bold" onClick={() => loginWithRedirect()}>
+              Login/Signup
+            </Link>
+            {/* <AvatarDropdown/> */}
             {location.pathname !== "/restaurant/items-list" ? (
               <>
                 {cart?.length > 0 && (

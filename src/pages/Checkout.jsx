@@ -12,6 +12,7 @@ import Notification from "../components/Notification";
 import { getTotalAmount } from "../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -19,13 +20,43 @@ export default function Checkout() {
   const dispatch = useDispatch();
   const totalAmount = useSelector(getTotalAmount);
   const [makepayment, setMakepayment] = useState(false);
+  const { user, isAuthenticated } = useAuth0();
+  const [formData, setFormData] = useState({
+    name: "",
+    mobile: ""
+  });
 
-  function paymentBtnClicked() {
-    setMakepayment(true);
-    setTimeout(() => {
-      setMakepayment(false);
-    }, 3000);
-  }
+  // function paymentBtnClicked() {
+  //   setMakepayment(true);
+  //   setTimeout(() => {
+  //     setMakepayment(false);
+  //   }, 3000);
+  // }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const setUserDetails = async () => {
+        try {
+          // const response = await fetch('YOUR_API_ENDPOINT', {
+          //   method: 'POST',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //     Authorization: `Bearer ${user.sub}`,
+          //   },
+          //   body: JSON.stringify({ user }),
+          // });
+          // const data = await response.json();
+          // console.log('API response:', data);
+
+          console.log('user ------------------------- ',user);
+        } catch (error) {
+          console.error('Error calling API:', error);
+        }
+      };
+
+      setUserDetails();
+    }
+  }, [isAuthenticated, user]);
 
   function removeFromCartClicked(item) {
     dispatch(decreament(item));
@@ -40,6 +71,13 @@ export default function Checkout() {
       navigate("/");
     }
   }, [cartArr]);
+
+  const handleChange = (e) => {
+    const obj = e.target;
+    for (const property in obj) {
+      console.log(`${property}: ${obj[property]}`);
+    }
+  }
 
   return (
     <div className="mx-auto my-4 max-w-4xl md:my-6">
@@ -69,9 +107,11 @@ export default function Checkout() {
                           </label>
                           <input
                             className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            value={formData.name}
                             type="text"
                             placeholder="Enter your name"
                             id="name"
+                            onChange={handleChange}
                           ></input>
                         </div>
                         <div className="mt-4 w-full">
@@ -84,6 +124,8 @@ export default function Checkout() {
                           <input
                             className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                             type="text"
+                            onChange={handleChange}
+                            value={formData.mobile}
                             placeholder="Enter your mobile"
                             id="mobile"
                           ></input>

@@ -10,6 +10,7 @@ import {
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { createUser } from '../services/User'
 
 export default function DrawerComp() {
   const [open, setOpen] = React.useState(false);
@@ -19,24 +20,22 @@ export default function DrawerComp() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const callApi = async () => {
+      const createOrupdateUser = async () => {
         try {
-          const response = await fetch('YOUR_API_ENDPOINT', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${user.sub}`,
-            },
-            body: JSON.stringify({ user }),
-          });
-          const data = await response.json();
-          console.log('API response:', data);
+        let obj = {
+          name: user.name,
+          picture: user.picture,
+          email: user.email
+        }
+        let res = await createUser(obj)
+        console.log('res ---------------- ',res);
+          
         } catch (error) {
           console.error('Error calling API:', error);
         }
       };
 
-      callApi();
+      createOrupdateUser();
     }
   }, [isAuthenticated, user]);
 
@@ -70,7 +69,7 @@ export default function DrawerComp() {
         </div>
         <List>
           <ListItem>
-            <Link className="font-bold" onClick={() => loginWithRedirect()}>
+            <Link className="font-bold block" onClick={() => loginWithRedirect()}>
               Login/Signup User
             </Link>
           </ListItem>
