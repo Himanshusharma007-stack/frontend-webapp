@@ -14,6 +14,7 @@ import SignInPage from "./pages/SignIn.jsx";
 import RestaurantItems from "./pages/RestaurantItems.jsx";
 import { ThemeProvider } from "@material-tailwind/react";
 import { LoginSignupUser } from "./pages/LoginSignupUser.jsx";
+import { Orders } from './pages/Orders.jsx'
 import { Auth0Provider } from '@auth0/auth0-react';
 
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: 'user/login-or-signup',
         element: <LoginSignupUser />
+      },
+      {
+        path: 'myorders',
+        element: <Orders />
       },
     ],
   },

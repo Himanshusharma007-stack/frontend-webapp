@@ -158,7 +158,7 @@ const PaymentForm = (props) => {
 
   return (
     <div>
-      <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
+      <div className="mt-10 flex justify-end border-gray-200 pt-2">
         <button
           type="submit"
           className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"

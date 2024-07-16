@@ -44,9 +44,6 @@ export default function Navbar() {
         }`}
       >
         <div className="inline-flex items-center space-x-2">
-          {/* <Link className="font-bold" to="/">
-            Sahyog Sabka
-          </Link> */}
           <DrawerComp isOpen={isDrawerOpen} onClose={closeDrawer} />
         </div>
 
@@ -55,7 +52,7 @@ export default function Navbar() {
             <Link className="font-bold" onClick={() => loginWithRedirect()}>
               Login/Signup
             </Link>
-            {/* <AvatarDropdown/> */}
+            <AvatarDropdown/>
             {location.pathname !== "/restaurant/items-list" ? (
               <>
                 {cart?.length > 0 && (
