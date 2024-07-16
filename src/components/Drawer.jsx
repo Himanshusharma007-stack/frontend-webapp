@@ -18,26 +18,26 @@ export default function DrawerComp() {
   const closeDrawer = () => setOpen(false);
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      const createOrupdateUser = async () => {
-        try {
-        let obj = {
-          name: user.name,
-          picture: user.picture,
-          email: user.email
-        }
-        let res = await createUser(obj)
-        console.log('res ---------------- ',res);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     const createOrupdateUser = async () => {
+  //       try {
+  //       let obj = {
+  //         name: user.name,
+  //         picture: user.picture,
+  //         email: user.email
+  //       }
+  //       let res = await createUser(obj)
+  //       console.log('res ---------------- ',res);
           
-        } catch (error) {
-          console.error('Error calling API:', error);
-        }
-      };
+  //       } catch (error) {
+  //         console.error('Error calling API:', error);
+  //       }
+  //     };
 
-      createOrupdateUser();
-    }
-  }, [isAuthenticated, user]);
+  //     createOrupdateUser();
+  //   }
+  // }, [isAuthenticated, user]);
 
   return (
     <React.Fragment>
