@@ -11,6 +11,7 @@ import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { createUser } from '../services/User'
+import localStorageFunctions from "../utils/localStorageFunctions.js";
 
 export default function DrawerComp() {
   const [open, setOpen] = React.useState(false);
@@ -18,26 +19,28 @@ export default function DrawerComp() {
   const closeDrawer = () => setOpen(false);
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     const createOrupdateUser = async () => {
-  //       try {
-  //       let obj = {
-  //         name: user.name,
-  //         picture: user.picture,
-  //         email: user.email
-  //       }
-  //       let res = await createUser(obj)
-  //       console.log('res ---------------- ',res);
-          
-  //       } catch (error) {
-  //         console.error('Error calling API:', error);
-  //       }
-  //     };
+  useEffect(() => {
+    if (isAuthenticated) {
+      const createOrupdateUser = async () => {
+        try {
+        let obj = {
+          name: user.name,
+          picture: user.picture,
+          email: user.email
+        }
+        let res = await createUser(obj)
+        console.log('res ---------------- ',res);
+        if (res.user) {
+          localStorageFunctions.saveInLocalstorage("userId", res.user._id);
+        }
+        } catch (error) {
+          console.error('Error calling API:', error);
+        }
+      };
 
-  //     createOrupdateUser();
-  //   }
-  // }, [isAuthenticated, user]);
+      createOrupdateUser();
+    }
+  }, [isAuthenticated, user]);
 
   return (
     <React.Fragment>

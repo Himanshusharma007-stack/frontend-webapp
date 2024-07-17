@@ -14,6 +14,9 @@ const PaymentForm = (props) => {
         response
       );
       console.log("verifyResponse ----------------- ", verifyResponse);
+      if (verifyResponse.status == 200) {
+        alert(verifyResponse.data);
+      }
     //   {
     //     "data": "Payment is successful",
     //     "status": 200,
@@ -55,7 +58,7 @@ const PaymentForm = (props) => {
     //     },
     //     "request": {}
     // }
-      alert(verifyResponse.data);
+      
     } catch (error) {
       console.error(error);
       alert("Payment verification failed");

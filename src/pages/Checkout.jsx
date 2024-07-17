@@ -118,6 +118,7 @@ export default function Checkout() {
           {/* Product List */}
           <div className="bg-gray-100 px-5 py-6 md:px-8">
             <div className="flow-root">
+              {/* {JSON.stringify(cartArr)} */}
               <ul className="-my-7 divide-y divide-gray-200">
                 {cartArr.map((cartItem) => (
                   <li key={cartItem._id} className="flex items-stretch justify-between space-x-5 py-7">
