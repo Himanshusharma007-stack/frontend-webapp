@@ -1,11 +1,11 @@
-// client/src/components/PaymentForm.js
-
 import React, { useState } from "react";
 import axios from "axios";
-// http://localhost:3000
+import { createOrder } from "../services/Order";
+import { useSelector } from "react-redux";
+import localStorageFunctions from "../utils/localStorageFunctions.js";
 
 const PaymentForm = (props) => {
-  const [amount, setAmount] = useState("");
+  const cartArr = useSelector((state) => state.cart.value);
 
   const handlePaymentSuccess = async (response) => {
     try {
@@ -13,52 +13,18 @@ const PaymentForm = (props) => {
         "http://localhost:3000/order/payment/verify",
         response
       );
-      console.log("verifyResponse ----------------- ", verifyResponse);
       if (verifyResponse.status == 200) {
         alert(verifyResponse.data);
+        await createOrder({
+          orderId: response.razorpay_order_id,
+          paymentId: response.razorpay_payment_id,
+          userId: localStorageFunctions.getDatafromLocalstorage("userId"),
+          amount: props.amount,
+          name: props.name,
+          mobile: props.mobile,
+          orderData: cartArr,
+        });
       }
-    //   {
-    //     "data": "Payment is successful",
-    //     "status": 200,
-    //     "statusText": "OK",
-    //     "headers": {
-    //         "content-length": "21",
-    //         "content-type": "text/html; charset=utf-8"
-    //     },
-    //     "config": {
-    //         "transitional": {
-    //             "silentJSONParsing": true,
-    //             "forcedJSONParsing": true,
-    //             "clarifyTimeoutError": false
-    //         },
-    //         "adapter": [
-    //             "xhr",
-    //             "http",
-    //             "fetch"
-    //         ],
-    //         "transformRequest": [
-    //             null
-    //         ],
-    //         "transformResponse": [
-    //             null
-    //         ],
-    //         "timeout": 0,
-    //         "xsrfCookieName": "XSRF-TOKEN",
-    //         "xsrfHeaderName": "X-XSRF-TOKEN",
-    //         "maxContentLength": -1,
-    //         "maxBodyLength": -1,
-    //         "env": {},
-    //         "headers": {
-    //             "Accept": "application/json, text/plain, */*",
-    //             "Content-Type": "application/json"
-    //         },
-    //         "method": "post",
-    //         "url": "http://localhost:3000/order/payment/verify",
-    //         "data": "{\"razorpay_payment_id\":\"pay_OMdZCwqu8X03VI\",\"razorpay_order_id\":\"order_OMdYAElomyRqWb\",\"razorpay_signature\":\"4755b5b1ec1059ba647ef786271e1c6999e73639d0d90961745deccae6dfbaa7\"}"
-    //     },
-    //     "request": {}
-    // }
-      
     } catch (error) {
       console.error(error);
       alert("Payment verification failed");
@@ -68,70 +34,10 @@ const PaymentForm = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("props.amount --------- ", props.amount);
-
       const orderResponse = await axios.post(
-        "http://localhost:3000/order/create",
+        "http://localhost:3000/order/payment",
         { amount: props.amount }
       );
-      console.log(
-        "orderResponse ======================================= ",
-        orderResponse
-      );
-    //   {
-    //     "data": {
-    //         "amount": 93600,
-    //         "amount_due": 93600,
-    //         "amount_paid": 0,
-    //         "attempts": 0,
-    //         "created_at": 1718367242,
-    //         "currency": "INR",
-    //         "entity": "order",
-    //         "id": "order_OMdYAElomyRqWb",
-    //         "notes": [],
-    //         "offer_id": null,
-    //         "receipt": null,
-    //         "status": "created"
-    //     },
-    //     "status": 200,
-    //     "statusText": "OK",
-    //     "headers": {
-    //         "content-length": "211",
-    //         "content-type": "application/json; charset=utf-8"
-    //     },
-    //     "config": {
-    //         "transitional": {
-    //             "silentJSONParsing": true,
-    //             "forcedJSONParsing": true,
-    //             "clarifyTimeoutError": false
-    //         },
-    //         "adapter": [
-    //             "xhr",
-    //             "http",
-    //             "fetch"
-    //         ],
-    //         "transformRequest": [
-    //             null
-    //         ],
-    //         "transformResponse": [
-    //             null
-    //         ],
-    //         "timeout": 0,
-    //         "xsrfCookieName": "XSRF-TOKEN",
-    //         "xsrfHeaderName": "X-XSRF-TOKEN",
-    //         "maxContentLength": -1,
-    //         "maxBodyLength": -1,
-    //         "env": {},
-    //         "headers": {
-    //             "Accept": "application/json, text/plain, */*",
-    //             "Content-Type": "application/json"
-    //         },
-    //         "method": "post",
-    //         "url": "http://localhost:3000/order/create",
-    //         "data": "{\"amount\":936}"
-    //     },
-    //     "request": {}
-    // }
       const orderData = orderResponse.data;
 
       const options = {
