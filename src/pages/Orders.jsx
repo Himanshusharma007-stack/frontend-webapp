@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { getUserById } from '../services/User'
 
 const products = [
   {
@@ -27,8 +28,24 @@ const products = [
 
 export function Orders() {
 
-  useEffect(() => {
-    console.log('inside orders ');
+  const [ordersData, setOrdersData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect( () => {
+    const fetchUserData = async () => {
+      try {
+        setIsLoading(true)
+        let userData = await getUserById('666d61f2f447d3be1433fb79')
+        console.log('userData ---------- ',userData);
+        setOrdersData(userData?.data?.orders || [])
+      } catch (error) {
+        console.error("Error --> ", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData()
   }, []);
 
 

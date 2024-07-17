@@ -21,4 +21,14 @@ export const createUser = async (obj) => {
   }
 };
 
+export const getUserById = async (id) => {
+  try {
+    const response = await apiClient.get(`/user/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error while find user by id:", error);
+    throw error.response.data;
+  }
+};
+
 export default apiClient;
