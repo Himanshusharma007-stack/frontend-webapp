@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { createOrder } from "../services/Order";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
+import { reset } from "../features/cart/cartSlice";
 
 const PaymentForm = (props) => {
   const cartArr = useSelector((state) => state.cart.value);
+  const dispatch = useDispatch();
 
   const handlePaymentSuccess = async (response) => {
     try {
@@ -15,7 +17,7 @@ const PaymentForm = (props) => {
       );
       if (verifyResponse.status == 200) {
         alert(verifyResponse.data);
-        await createOrder({
+        let orderCreatedRes = await createOrder({
           orderId: response.razorpay_order_id,
           paymentId: response.razorpay_payment_id,
           userId: localStorageFunctions.getDatafromLocalstorage("userId"),
@@ -24,6 +26,8 @@ const PaymentForm = (props) => {
           mobile: props.mobile,
           orderData: cartArr,
         });
+        console.log('orderCreatedRes ------------ ',orderCreatedRes);
+        dispatch(reset());
       }
     } catch (error) {
       console.error(error);

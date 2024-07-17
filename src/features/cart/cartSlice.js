@@ -12,8 +12,12 @@ export const cartSlice = createSlice({
       let item = { ...action.payload, quantity: 1 };
       state.value.push(item);
     },
-    increament: (state, action) => {
 
+    reset: (state) => {
+      state.value = [];
+    },
+
+    increament: (state, action) => {
       state.value.forEach((elem) => {
         if (elem._id === action.payload._id) {
           elem.quantity += 1;
@@ -55,6 +59,6 @@ export const getTotalAmount = createSelector(
 );
 
 // Action creators are generated for each case reducer function
-export const { add, increament, decreament, deletefromCart } = cartSlice.actions;
+export const { add, reset, increament, decreament, deletefromCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
