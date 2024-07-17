@@ -71,11 +71,11 @@ export default function DrawerComp() {
           </IconButton>
         </div>
         <List>
-          <ListItem>
+          {!user?.picture && <ListItem>
             <Link className="font-bold block" onClick={() => loginWithRedirect()}>
               Login/Signup User
             </Link>
-          </ListItem>
+          </ListItem>}
           <ListItem>
             <Link className="font-bold" to="/restaurant/login-or-signup">
               Add to your restaurant
