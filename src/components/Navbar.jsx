@@ -16,7 +16,7 @@ export default function Navbar() {
   const cart = useSelector((state) => state.cart.value);
   const location = useLocation();
   const navigate = useNavigate();
-  const { loginWithRedirect } = useAuth0();
+  const { user, loginWithRedirect } = useAuth0();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -49,9 +49,9 @@ export default function Navbar() {
 
         <div className=" lg:block">
           <div className="flex justify-center">
-            <Link className="font-bold" onClick={() => loginWithRedirect()}>
+            {!user?.picture && <Link className="font-bold" onClick={() => loginWithRedirect()}>
               Login/Signup
-            </Link>
+            </Link>}
             <AvatarDropdown/>
             {location.pathname !== "/restaurant/items-list" ? (
               <>
