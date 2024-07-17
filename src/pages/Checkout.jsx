@@ -104,7 +104,7 @@ export default function Checkout() {
                           />
                         </div>
                       </div>
-                      <PaymentForm amount={totalAmount} />
+                      <PaymentForm amount={totalAmount} name={formData.name} mobile={formData.mobile} />
                     </div>
                   </form>
 
