@@ -34,6 +34,10 @@ const AvatarDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    console.log('user ----------------- ',user);
+  }, [user])
+
   return (
     <>
       {/* <div>{JSON.stringify(user)}</div> */}
