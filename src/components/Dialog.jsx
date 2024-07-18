@@ -62,26 +62,32 @@ export function DialogBox(props) {
       setErrors(newErrors);
       return;
     }
-
+  
     let data = localStorageFunctions.getDatafromLocalstorage("data");
     let obj = {
       ...formData,
       restaurant: { ...data },
     };
-
+  
     // Create a FormData object to send file data
     const formDataToSend = new FormData();
     for (const key in obj) {
-      formDataToSend.append(key, obj[key]);
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        for (const subKey in obj[key]) {
+          formDataToSend.append(`${key}[${subKey}]`, obj[key][subKey]);
+        }
+      } else {
+        formDataToSend.append(key, obj[key]);
+      }
     }
     if (formData.image) {
       formDataToSend.append("image", formData.image);
     }
-
+  
     try {
       setIsLoading(true);
       if (props.data) {
-        obj._id = props.data._id;
+        formDataToSend.append('_id', props.data._id);
         let res = await updateFoodItem(formDataToSend); // Update to send FormData
         if (res.success) {
           setOpen(false); // Close the dialog on successful submission
@@ -100,6 +106,7 @@ export function DialogBox(props) {
       setIsLoading(false);
     }
   }
+  
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -179,6 +186,10 @@ export function DialogBox(props) {
       <Dialog open={open}>
         <DialogHeader>
           {props?.data ? <span>Edit Item</span> : <span>Add Item</span>}
+
+          <div>
+            {JSON.stringify(props.data)}
+          </div>
         </DialogHeader>
         <DialogBody>
           <div className="grid grid-cols-2 gap-3">
