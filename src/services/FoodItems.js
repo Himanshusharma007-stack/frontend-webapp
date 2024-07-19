@@ -11,10 +11,17 @@ const apiClient = axios.create({
   },
 });
 
+const imageApiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
+
 // Function to create foodItem
 export const createFoodItem = async (obj) => {
   try {
-    const response = await apiClient.post("/foodItem/create", obj);
+    const response = await imageApiClient.post("/foodItem/create", obj);
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
@@ -24,7 +31,7 @@ export const createFoodItem = async (obj) => {
 
 export const updateFoodItem = async (obj) => {
   try {
-    const response = await apiClient.post("/foodItem/update", obj);
+    const response = await imageApiClient.post("/foodItem/update", obj);
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);

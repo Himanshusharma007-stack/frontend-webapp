@@ -66,39 +66,35 @@ export function DialogBox(props) {
     let data = localStorageFunctions.getDatafromLocalstorage("data");
     let obj = {
       ...formData,
-      restaurant: { ...data },
+      restaurant: data, // No need to spread data here
     };
   
     // Create a FormData object to send file data
     const formDataToSend = new FormData();
     for (const key in obj) {
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
-        for (const subKey in obj[key]) {
-          formDataToSend.append(`${key}[${subKey}]`, obj[key][subKey]);
-        }
+      if (typeof obj[key] === 'object' && obj[key] !== null && key !== 'image') {
+        formDataToSend.append(key, JSON.stringify(obj[key]));
       } else {
         formDataToSend.append(key, obj[key]);
       }
     }
-    if (formData.image) {
-      formDataToSend.append("image", formData.image);
-    }
+  
+    // if (formData.image) {
+    //   formDataToSend.append("image", formData.image);
+    // }
   
     try {
       setIsLoading(true);
+      let res;
       if (props.data) {
         formDataToSend.append('_id', props.data._id);
-        let res = await updateFoodItem(formDataToSend); // Update to send FormData
-        if (res.success) {
-          setOpen(false); // Close the dialog on successful submission
-          props.getMenuByRestoId();
-        }
+        res = await updateFoodItem(formDataToSend); // Update to send FormData
       } else {
-        let res = await createFoodItem(formDataToSend); // Update to send FormData
-        if (res.success) {
-          setOpen(false); // Close the dialog on successful submission
-          props.getMenuByRestoId();
-        }
+        res = await createFoodItem(formDataToSend); // Update to send FormData
+      }
+      if (res.success) {
+        setOpen(false); // Close the dialog on successful submission
+        props.getMenuByRestoId();
       }
     } catch (error) {
       console.error("Error:", error);
@@ -107,11 +103,9 @@ export function DialogBox(props) {
     }
   }
   
-
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
-      console.log('file ------------------------ ', file);
       setFormData((prevData) => ({
         ...prevData,
         [name]: files[0], // Store the file in formData
@@ -186,10 +180,6 @@ export function DialogBox(props) {
       <Dialog open={open}>
         <DialogHeader>
           {props?.data ? <span>Edit Item</span> : <span>Add Item</span>}
-
-          <div>
-            {JSON.stringify(props.data)}
-          </div>
         </DialogHeader>
         <DialogBody>
           <div className="grid grid-cols-2 gap-3">
