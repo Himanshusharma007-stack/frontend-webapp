@@ -79,10 +79,6 @@ export function DialogBox(props) {
       }
     }
   
-    // if (formData.image) {
-    //   formDataToSend.append("image", formData.image);
-    // }
-  
     try {
       setIsLoading(true);
       let res;
