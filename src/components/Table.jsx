@@ -1,16 +1,29 @@
 import { Card, Typography, Button } from "@material-tailwind/react";
 import { DialogBox } from "../components/Dialog";
 import { RotateCw } from "lucide-react";
-const TABLE_HEAD = ["Name / Price (in ₹)", "Description", "In Stock", "Action"];
+const TABLE_HEAD = [
+  "Name / Price (in ₹)",
+  "Image",
+  "Description",
+  "In Stock",
+  "Action",
+];
 
 export function Table(props) {
   return (
     <>
       <div className="flex justify-end mb-4">
-        <button className="mx-5" onClick={props.getMenuByRestoId} disabled={props.isLoading}>
+        <button
+          className="mx-5"
+          onClick={props.getMenuByRestoId}
+          disabled={props.isLoading}
+        >
           <RotateCw className={props.isLoading ? "animate-spin" : ""} />
         </button>
-        <DialogBox getMenuByRestoId={props.getMenuByRestoId} isLoading={props.isLoading} />
+        <DialogBox
+          getMenuByRestoId={props.getMenuByRestoId}
+          isLoading={props.isLoading}
+        />
       </div>
       <div className="relative">
         {props.isLoading && (
@@ -18,7 +31,11 @@ export function Table(props) {
             <div className="loader">Loading...</div>
           </div>
         )}
-        <Card className={`h-full w-full overflow-scroll ${props.isLoading ? 'opacity-50 pointer-events-none' : ''}`}>
+        <Card
+          className={`h-full w-full overflow-scroll ${
+            props.isLoading ? "opacity-50 pointer-events-none" : ""
+          }`}
+        >
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
@@ -46,6 +63,7 @@ export function Table(props) {
                     name,
                     description: desc,
                     price,
+                    imageUrl,
                     size,
                     category,
                     isVeg,
@@ -70,6 +88,14 @@ export function Table(props) {
                           <br />
                           {price}
                         </Typography>
+                      </td>
+                      <td>
+                        {!imageUrl ? '-' : (<img
+                          className="w-8 h-8 rounded-full"
+                          src={imageUrl}
+                          alt="Avatar"
+                          loading='eager'
+                        />)}
                       </td>
                       <td className={classes}>
                         <Typography
