@@ -53,6 +53,9 @@ export function DialogBox(props) {
     if (!formData.description) newErrors.description = "Description is required";
     if (!formData.price) newErrors.price = "Price is required";
     else if (isNaN(formData.price)) newErrors.price = "Price must be a number";
+    // if (formData.image && formData.image.size > 7 * 1024 * 1024) {
+    //   newErrors.image = "Image size must be below 7MB";
+    // }
     return newErrors;
   };
 
