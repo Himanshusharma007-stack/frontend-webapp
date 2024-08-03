@@ -67,6 +67,9 @@ export function DialogBox(props) {
     }
   
     let data = localStorageFunctions.getDatafromLocalstorage("data");
+    if (data.password) {
+      delete data.password
+    }
     let obj = {
       ...formData,
       restaurant: data, // No need to spread data here

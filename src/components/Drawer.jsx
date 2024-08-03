@@ -31,7 +31,6 @@ export default function DrawerComp() {
           email: user.email
         }
         let res = await createUser(obj)
-        console.log('res ---------------- ',res);
         if (res.user) {
           localStorageFunctions.saveInLocalstorage("userId", res.user._id);
         }
