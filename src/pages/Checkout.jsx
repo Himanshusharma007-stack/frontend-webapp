@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Trash } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { increament, decreament, deletefromCart, getTotalAmount } from "../features/cart/cartSlice";
+import {
+  increament,
+  decreament,
+  deletefromCart,
+  getTotalAmount,
+} from "../features/cart/cartSlice";
 import PaymentForm from "../components/PaymentForm";
 import Notification from "../components/Notification";
 import { useNavigate } from "react-router-dom";
@@ -16,16 +21,16 @@ export default function Checkout() {
   const { user, isAuthenticated } = useAuth0();
   const [formData, setFormData] = useState({
     name: "",
-    mobile: ""
+    mobile: "",
   });
 
   useEffect(() => {
     if (isAuthenticated) {
       const setUserDetails = async () => {
         try {
-          console.log('user ------------------------- ', user);
+          console.log("user ------------------------- ", user);
         } catch (error) {
-          console.error('Error calling API:', error);
+          console.error("Error calling API:", error);
         }
       };
 
@@ -35,11 +40,11 @@ export default function Checkout() {
 
   const removeFromCartClicked = (item) => {
     dispatch(decreament(item));
-  }
+  };
 
   const addToCartClicked = (item) => {
     dispatch(increament(item));
-  }
+  };
 
   useEffect(() => {
     if (!cartArr.length) {
@@ -51,16 +56,16 @@ export default function Checkout() {
     if (user?.name !== user?.email) {
       setFormData((prevFormData) => ({ ...prevFormData, name: user.name }));
     }
-    console.log('user ---------- ', user);
+    console.log("user ---------- ", user);
   }, [user]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [id]: value
+      [id]: value,
     }));
-  }
+  };
 
   return (
     <div className="mx-auto my-4 max-w-4xl md:my-6">
@@ -74,11 +79,17 @@ export default function Checkout() {
                   <form>
                     <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                       <div>
-                        <h3 id="contact-info-heading" className="text-lg font-semibold text-gray-900">
+                        <h3
+                          id="contact-info-heading"
+                          className="text-lg font-semibold text-gray-900"
+                        >
                           Contact information
                         </h3>
                         <div className="mt-4 w-full">
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="name">
+                          <label
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            htmlFor="name"
+                          >
                             Full Name
                           </label>
                           <input
@@ -91,7 +102,10 @@ export default function Checkout() {
                           />
                         </div>
                         <div className="mt-4 w-full">
-                          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="mobile">
+                          <label
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            htmlFor="mobile"
+                          >
                             Mobile
                           </label>
                           <input
@@ -104,12 +118,19 @@ export default function Checkout() {
                           />
                         </div>
                       </div>
-                      <PaymentForm amount={totalAmount} name={formData.name} mobile={formData.mobile} />
+                      <PaymentForm
+                        amount={totalAmount}
+                        name={formData.name}
+                        mobile={formData.mobile}
+                      />
                     </div>
                   </form>
 
                   {makepayment && (
-                    <Notification msg="This feature will be available soon." close={() => setMakepayment(false)} />
+                    <Notification
+                      msg="This feature will be available soon."
+                      close={() => setMakepayment(false)}
+                    />
                   )}
                 </div>
               </div>
@@ -121,19 +142,30 @@ export default function Checkout() {
               {/* {JSON.stringify(cartArr)} */}
               <ul className="-my-7 divide-y divide-gray-200">
                 {cartArr.map((cartItem) => (
-                  <li key={cartItem._id} className="flex items-stretch justify-between space-x-5 py-7">
+                  <li
+                    key={cartItem._id}
+                    className="flex items-stretch justify-between space-x-5 py-7"
+                  >
                     <div className="flex flex-1 items-stretch">
                       <div className="flex-shrink-0">
-                        <img
-                          className="h-20 w-20 rounded-lg border border-gray-200 bg-white object-contain"
-                          src={cartItem.imageUrl}
-                          alt={cartItem.imageUrl}
-                        />
+                        {cartItem.imageUrl ? (
+                          <img
+                            className="h-20 w-20 rounded-lg border border-gray-200 bg-white object-contain"
+                            src={cartItem.imageUrl}
+                            alt={cartItem.imageUrl}
+                          />
+                        ) : (
+                          <div className="h-20 w-20 flex items-center justify-center bg-gray-300 text-gray-500">
+                            No Image
+                          </div>
+                        )}
                       </div>
                       <div className="ml-5 flex flex-col justify-between">
                         <div className="flex-1">
                           <p className="text-sm font-bold">{cartItem.name}</p>
-                          <p className="text-xs font-semibold line-clamp-3">{cartItem.description}</p>
+                          <p className="text-xs font-semibold line-clamp-3">
+                            {cartItem.description}
+                          </p>
                         </div>
                         <p className="mt-4 text-xs font-medium ">
                           <button
