@@ -4,10 +4,12 @@ import { createOrder } from "../services/Order";
 import { useSelector, useDispatch } from "react-redux";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
 import { reset } from "../features/cart/cartSlice";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const PaymentForm = (props) => {
   const cartArr = useSelector((state) => state.cart.value);
   const dispatch = useDispatch();
+  const { user, loginWithRedirect } = useAuth0();
 
   const handlePaymentSuccess = async (response) => {
     try {
@@ -72,13 +74,24 @@ const PaymentForm = (props) => {
   return (
     <div>
       <div className="mt-10 flex justify-end border-gray-200 pt-2">
-        <button
+
+        {!user?.picture ? (
+          <button
+          type="submit"
+          className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+          onClick={() => loginWithRedirect()}
+        >
+          Login User
+        </button>
+        ) : (<button
           type="submit"
           className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           onClick={handleSubmit}
         >
-          Make payment
-        </button>
+          Make Payment
+        </button>)
+        }
+
       </div>
     </div>
   );
