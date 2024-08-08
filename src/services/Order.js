@@ -21,4 +21,14 @@ export const createOrder = async ({ orderId, paymentId, userId, amount, name, mo
   }
 };
 
+export const getOrdersDataByUserId = async (id) => {
+  try {
+    const response = await apiClient.get(`/order/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error while find user by id:", error);
+    throw error.response.data;
+  }
+};
+
 export default apiClient;

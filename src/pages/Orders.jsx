@@ -5,6 +5,7 @@ import dateFormatter from "../utils/formatDate.js";
 import { NoOrderFound } from "../components/NoOrderFound.jsx"; // Ensure correct import
 import Notification from "../components/Notification";
 import moment from "moment";
+import { getOrdersDataByUserId } from "../services/Order";
 
 export function Orders() {
   const [ordersData, setOrdersData] = useState([]);
@@ -14,9 +15,8 @@ export function Orders() {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        let userData = await getUserById("666d61f2f447d3be1433fb79");
-        console.log("userData ---------- ", userData);
-        setOrdersData(userData?.data?.orders || []);
+        let ordersData = await getOrdersDataByUserId("666d61f2f447d3be1433fb79");
+        setOrdersData(ordersData?.data || []);
       } catch (error) {
         console.error("Error --> ", error);
       } finally {
@@ -38,7 +38,7 @@ export function Orders() {
             Check the status of recent and old orders
           </div>
           {ordersData
-            .sort((a, b) => b?.orderId?.localeCompare(a?.orderId))
+            .sort((a, b) => b?._id?.localeCompare(a?._id))
             ?.map((order) => (
               <>
                 {order?.prepareUpto && !order?.isDelivered ? (
@@ -54,11 +54,11 @@ export function Orders() {
                   <span></span>
                 )}
                 <OrderCard
-                  key={order.orderId}
-                  items={order.data || []}
+                  key={order._id}
+                  items={order.items || []}
                   orderStatus={order?.isDelivered || false ? 'Delivered' : moment(new Date()).isAfter(moment(order?.prepareUpto)) ? 'Ready' : 'Preparing'}
                   rawData={{
-                    orderId: order.orderId,
+                    orderId: order._id,
                     amount: order.amount,
                     createdAt: dateFormatter.formatDate(
                       order.createdAt,
