@@ -19,7 +19,7 @@ export default function OrderCard(props) {
                       : value == "Ready"
                       ? "text-red-400"
                       : value == "Delivered"
-                      ? "text-blue-400"
+                      ? "text-blue-300"
                       : ""
                   } text-sm font-medium text-gray-700 truncate`}
                 >
