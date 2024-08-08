@@ -18,8 +18,8 @@ const PaymentForm = (props) => {
         response
       );
       if (verifyResponse.status == 200) {
-        alert(verifyResponse.data);
-        let orderCreatedRes = await createOrder({
+        // alert(verifyResponse.data);
+        let orderCreatedRes = createOrder({
           orderId: response.razorpay_order_id,
           paymentId: response.razorpay_payment_id,
           userId: localStorageFunctions.getDatafromLocalstorage("userId"),
