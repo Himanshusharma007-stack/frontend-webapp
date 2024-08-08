@@ -46,7 +46,7 @@ export function Orders() {
                     msg={moment(new Date()).isBefore(moment(order?.prepareUpto)) ? `Your order will be prepared upto ${dateFormatter.formatDate(
                       order?.prepareUpto,
                       "MMMM Do YYYY, h:mm:ss a"
-                    )}` : 'Your order is ready please pickup from restaurant.'}
+                    )}` : 'Your order is ready please take away from restaurant.'}
                     notificationClass="mt-6"
                     hideCloseBtn={true}
                   />
