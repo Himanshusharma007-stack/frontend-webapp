@@ -36,7 +36,7 @@ export function Table(props) {
             props.isLoading ? "opacity-50 pointer-events-none" : ""
           }`}
         >
-          <table className="w-full min-w-max table-auto text-left">
+          <table className="min-w-full divide-y divide-gray-200">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head) => (
