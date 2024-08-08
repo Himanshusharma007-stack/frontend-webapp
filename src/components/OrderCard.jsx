@@ -7,8 +7,7 @@ export default function OrderCard(props) {
             {[
               ["Order ID", props?.rawData?.orderId || ""],
               ["Date", props?.rawData?.createdAt],
-              ["Total Amount", "₹" + props?.rawData?.amount || 0],
-              // ["Order Status", "Confirmed"],
+              ["Total Amount", "₹" + props?.rawData?.amount || 0]
             ].map(([key, value]) => (
               <div key={key} className="mb-4">
                 <div className="text-sm font-semibold">{key}</div>
@@ -28,11 +27,17 @@ export default function OrderCard(props) {
               >
                 <div className="flex flex-1 items-stretch">
                   <div className="flex-shrink-0">
-                    <img
-                      className="h-20 w-20 rounded-lg border border-gray-200 object-contain"
-                      src={item.imageUrl}
-                      alt={item.imageUrl}
-                    />
+                    {item.imageUrl ? (
+                      <img
+                        className="h-20 w-20 rounded-lg border border-gray-200 object-contain"
+                        src={item.imageUrl}
+                        alt={item.imageUrl}
+                      />
+                    ) : (
+                      <div className="h-20 w-20 flex items-center justify-center bg-gray-300 text-gray-500">
+                        No Image
+                      </div>
+                    )}
                   </div>
 
                   <div className="ml-5 flex flex-col justify-between">

@@ -35,7 +35,7 @@ export function Orders() {
           <div className="mt-3 text-sm">
             Check the status of recent and old orders
           </div>
-          {ordersData.map((order) => (
+          {ordersData.sort((a, b) => b?.orderId?.localeCompare(a?.orderId))?.map((order) => (
             <OrderCard
               key={order.orderId}
               items={order.data || []}
