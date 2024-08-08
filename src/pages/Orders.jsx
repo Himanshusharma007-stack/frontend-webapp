@@ -3,6 +3,7 @@ import { getUserById } from "../services/User";
 import OrderCard from "../components/OrderCard";
 import dateFormatter from "../utils/formatDate.js";
 import { NoOrderFound } from "../components/NoOrderFound.jsx"; // Ensure correct import
+import Notification from "../components/Notification";
 
 export function Orders() {
   const [ordersData, setOrdersData] = useState([]);
@@ -32,19 +33,27 @@ export function Orders() {
       ) : (
         <div className="mx-auto my-4 max-w-6xl px-2 md:my-6 md:px-0">
           <h2 className="text-3xl font-bold">Order Details</h2>
-          <div className="mt-3 text-sm">
+          <div className="mt-3 text-sm mb-3">
             Check the status of recent and old orders
           </div>
           {ordersData.sort((a, b) => b?.orderId?.localeCompare(a?.orderId))?.map((order) => (
+            <>
+            {/* <>{JSON.stringify(ordersData)}</> */}
+            {order?.prepareUpto ? <Notification
+          msg={`Your order will be prepared upto ${dateFormatter.formatDate(order?.prepareUpto, 'MMMM Do YYYY, h:mm:ss a')}`}
+          notificationClass="mt-6"
+          hideCloseBtn={true}
+        /> : <span></span>}
             <OrderCard
               key={order.orderId}
               items={order.data || []}
               rawData={{
                 orderId: order.orderId,
                 amount: order.amount,
-                createdAt: dateFormatter.formatDate(order.createdAt),
+                createdAt: dateFormatter.formatDate(order.createdAt, 'MMMM Do YYYY, h:mm:ss a'),
               }}
             />
+            </>
           ))}
         </div>
       )}

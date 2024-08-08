@@ -1,6 +1,6 @@
 export default function OrderCard(props) {
   return (
-    <div className="mt-8 flex flex-col overflow-hidden rounded-lg border border-gray-300 md:flex-row">
+    <div className="mt-3 flex flex-col overflow-hidden rounded-lg border border-gray-300 md:flex-row">
       <div className="w-full border-r border-gray-300 bg-gray-100 md:max-w-xs">
         <div className="p-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1">
