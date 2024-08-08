@@ -4,6 +4,7 @@ import OrderCard from "../components/OrderCard";
 import dateFormatter from "../utils/formatDate.js";
 import { NoOrderFound } from "../components/NoOrderFound.jsx"; // Ensure correct import
 import Notification from "../components/Notification";
+import moment from "moment";
 
 export function Orders() {
   const [ordersData, setOrdersData] = useState([]);
@@ -36,25 +37,38 @@ export function Orders() {
           <div className="mt-3 text-sm mb-3">
             Check the status of recent and old orders
           </div>
-          {ordersData.sort((a, b) => b?.orderId?.localeCompare(a?.orderId))?.map((order) => (
-            <>
-            {/* <>{JSON.stringify(ordersData)}</> */}
-            {order?.prepareUpto ? <Notification
-          msg={`Your order will be prepared upto ${dateFormatter.formatDate(order?.prepareUpto, 'MMMM Do YYYY, h:mm:ss a')}`}
-          notificationClass="mt-6"
-          hideCloseBtn={true}
-        /> : <span></span>}
-            <OrderCard
-              key={order.orderId}
-              items={order.data || []}
-              rawData={{
-                orderId: order.orderId,
-                amount: order.amount,
-                createdAt: dateFormatter.formatDate(order.createdAt, 'MMMM Do YYYY, h:mm:ss a'),
-              }}
-            />
-            </>
-          ))}
+          {ordersData
+            .sort((a, b) => b?.orderId?.localeCompare(a?.orderId))
+            ?.map((order) => (
+              <>
+                {order?.prepareUpto && !order?.isDelivered ? (
+                  <Notification
+                    msg={moment(new Date()).isBefore(moment(order?.prepareUpto)) ? `Your order will be prepared upto ${dateFormatter.formatDate(
+                      order?.prepareUpto,
+                      "MMMM Do YYYY, h:mm:ss a"
+                    )}` : 'Your order is ready please pickup from restaurant.'}
+                    notificationClass="mt-6"
+                    hideCloseBtn={true}
+                  />
+                ) : (
+                  <span></span>
+                )}
+                <OrderCard
+                  key={order.orderId}
+                  items={order.data || []}
+                  orderStatus={order?.isDelivered || false ? 'Delivered' : moment(new Date()).isAfter(moment(order?.prepareUpto)) ? 'Ready' : 'Preparing'}
+                  rawData={{
+                    orderId: order.orderId,
+                    amount: order.amount,
+                    createdAt: dateFormatter.formatDate(
+                      order.createdAt,
+                      "MMMM Do YYYY, h:mm:ss a"
+                    ),
+                  }}
+
+                />
+              </>
+            ))}
         </div>
       )}
     </div>

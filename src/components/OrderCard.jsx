@@ -7,11 +7,24 @@ export default function OrderCard(props) {
             {[
               ["Order ID", props?.rawData?.orderId || ""],
               ["Date", props?.rawData?.createdAt],
-              ["Total Amount", "₹" + props?.rawData?.amount || 0]
+              ["Total Amount", "₹" + props?.rawData?.amount || 0],
+              ["Status", props?.orderStatus || ""],
             ].map(([key, value]) => (
               <div key={key} className="mb-4">
                 <div className="text-sm font-semibold">{key}</div>
-                <div className="text-sm font-medium text-gray-700">{value}</div>
+                <div
+                  className={`${
+                    value == "Preparing"
+                      ? "text-green-400"
+                      : value == "Ready"
+                      ? "text-red-400"
+                      : value == "Delivered"
+                      ? "text-blue-400"
+                      : ""
+                  } text-sm font-medium text-gray-700 truncate`}
+                >
+                  {value}
+                </div>
               </div>
             ))}
           </div>
