@@ -1,6 +1,6 @@
 export default function OrderCard(props) {
   return (
-    <div className="mt-8 flex flex-col overflow-hidden rounded-lg border border-gray-300 md:flex-row">
+    <div className="mt-3 flex flex-col overflow-hidden rounded-lg border border-gray-300 md:flex-row">
       <div className="w-full border-r border-gray-300 bg-gray-100 md:max-w-xs">
         <div className="p-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1">
@@ -8,11 +8,23 @@ export default function OrderCard(props) {
               ["Order ID", props?.rawData?.orderId || ""],
               ["Date", props?.rawData?.createdAt],
               ["Total Amount", "₹" + props?.rawData?.amount || 0],
-              // ["Order Status", "Confirmed"],
+              ["Status", props?.orderStatus || ""],
             ].map(([key, value]) => (
               <div key={key} className="mb-4">
                 <div className="text-sm font-semibold">{key}</div>
-                <div className="text-sm font-medium text-gray-700">{value}</div>
+                <div
+                  className={`${
+                    value == "Preparing"
+                      ? "text-green-400"
+                      : value == "Ready"
+                      ? "text-red-400"
+                      : value == "Delivered"
+                      ? "text-blue-400"
+                      : ""
+                  } text-sm font-medium text-gray-700 truncate`}
+                >
+                  {value}
+                </div>
               </div>
             ))}
           </div>
@@ -28,17 +40,23 @@ export default function OrderCard(props) {
               >
                 <div className="flex flex-1 items-stretch">
                   <div className="flex-shrink-0">
-                    <img
-                      className="h-20 w-20 rounded-lg border border-gray-200 object-contain"
-                      src={item.imageUrl}
-                      alt={item.imageUrl}
-                    />
+                    {item.imageUrl ? (
+                      <img
+                        className="h-20 w-20 rounded-lg border border-gray-200 object-contain"
+                        src={item.imageUrl}
+                        alt={item.imageUrl}
+                      />
+                    ) : (
+                      <div className="h-20 w-20 flex items-center justify-center bg-gray-300 text-gray-500">
+                        No Image
+                      </div>
+                    )}
                   </div>
 
                   <div className="ml-5 flex flex-col justify-between">
                     <div className="flex-1">
                       <p className="text-sm font-bold text-gray-900">
-                        {item.name}
+                        {item.name} from - {item?.restaurant?.name}
                       </p>
                       <p className="mt-1.5 text-sm font-medium text-gray-500">
                         {item.description}

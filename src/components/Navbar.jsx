@@ -49,7 +49,7 @@ export default function Navbar() {
 
         <div className=" lg:block">
           <div className="flex justify-center">
-            {!user?.picture && <Link className="font-bold" onClick={() => loginWithRedirect()}>
+            {!user?.picture && location.pathname !== "/restaurant/items-list" && <Link className="font-bold" onClick={() => loginWithRedirect()}>
               Login/Signup
             </Link>}
             <AvatarDropdown/>

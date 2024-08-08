@@ -12,12 +12,14 @@ import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { createUser } from '../services/User'
 import localStorageFunctions from "../utils/localStorageFunctions.js";
+import { useLocation } from "react-router-dom";
 
 export default function DrawerComp() {
   const [open, setOpen] = React.useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
+  const location = useLocation();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -29,7 +31,6 @@ export default function DrawerComp() {
           email: user.email
         }
         let res = await createUser(obj)
-        console.log('res ---------------- ',res);
         if (res.user) {
           localStorageFunctions.saveInLocalstorage("userId", res.user._id);
         }
@@ -71,7 +72,7 @@ export default function DrawerComp() {
           </IconButton>
         </div>
         <List>
-          {!user?.picture && <ListItem>
+          {!user?.picture && location.pathname !== "/restaurant/items-list" && <ListItem>
             <Link className="font-bold block" onClick={() => loginWithRedirect()}>
               Login/Signup User
             </Link>
