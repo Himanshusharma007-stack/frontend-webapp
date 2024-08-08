@@ -56,7 +56,7 @@ export default function OrderCard(props) {
                   <div className="ml-5 flex flex-col justify-between">
                     <div className="flex-1">
                       <p className="text-sm font-bold text-gray-900">
-                        {item.name}
+                        {item.name} from - {item?.restaurant?.name}
                       </p>
                       <p className="mt-1.5 text-sm font-medium text-gray-500">
                         {item.description}
