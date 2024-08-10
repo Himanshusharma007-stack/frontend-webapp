@@ -31,4 +31,14 @@ export const getOrdersDataByUserId = async (id) => {
   }
 };
 
+export const getOrdersDataRestaurantId = async (id) => {
+  try {
+    const response = await apiClient.get(`/order/restaurant/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error while find user by id:", error);
+    throw error.response.data;
+  }
+};
+
 export default apiClient;

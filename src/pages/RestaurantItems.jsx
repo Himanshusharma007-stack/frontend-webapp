@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanel,
 } from "@material-tailwind/react";
+import RestaurantOrders from "./RestaurantOrders.jsx";
 
 export default function RestaurantItems() {
   const location = useLocation();
@@ -121,7 +122,7 @@ export default function RestaurantItems() {
               />
             </TabPanel>
             <TabPanel value={"orders"}>
-              <div>Inside orders</div>
+              <RestaurantOrders />
             </TabPanel>
 
           </TabsBody>
