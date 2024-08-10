@@ -1,6 +1,7 @@
 import DynamicTable from "../components/DynamicTable";
 import { useState, useEffect, useMemo } from "react";
 import { getOrdersDataRestaurantId } from "../services/Order";
+import statusChecker from "../utils/checkStatus.js";
 
 export default function RestaurantOrders() {
   let [isLoading, setIsLoading] = useState(false);
@@ -12,6 +13,7 @@ export default function RestaurantOrders() {
     },
     { title: "Items", value: "items" },
     { title: "Amount(in ₹)", value: "amount" },
+    { title: "Status", value: "status" },
     { title: "Action", value: "edit" },
   ];
 
@@ -43,7 +45,7 @@ export default function RestaurantOrders() {
   // Compute the order data
   const computedOrderData = useMemo(() => {
     return orderData.map((data) => {
-      return { _id: data?._id, amount: data?.amount, items: data?.items?.map((item) => item?.name)?.join(', '), userName: data?.user?.name, userMobile: data?.user?.mobile, userEmail: data?.user?.email, status: '' }
+      return { _id: data?._id, amount: data?.amount, items: data?.items?.map((item) => item?.name)?.join(', '), userName: data?.user?.name, userMobile: data?.user?.mobile, userEmail: data?.user?.email, status: statusChecker.checkStatus(data) }
     })
   }, [orderData]);
 
@@ -63,7 +65,7 @@ export default function RestaurantOrders() {
   return (
     <>
       <div className="font-bold text-2xl text-black">Restaurant order tab</div>
-      <div>{JSON.stringify(computedOrderData)}</div>
+      {/* <div>{JSON.stringify(computedOrderData)}</div> */}
         <DynamicTable
           header={header}
           items={computedOrderData}
