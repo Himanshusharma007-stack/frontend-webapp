@@ -1,3 +1,5 @@
+import theme from "../theme";
+
 export default function OrderCard(props) {
   return (
     <div className="mt-3 flex flex-col overflow-hidden rounded-lg border border-gray-300 md:flex-row">
@@ -13,15 +15,15 @@ export default function OrderCard(props) {
               <div key={key} className="mb-4">
                 <div className="text-sm font-semibold">{key}</div>
                 <div
-                  className={`${
-                    value == "Preparing"
-                      ? "text-green-400"
-                      : value == "Ready"
-                      ? "text-red-400"
-                      : value == "Delivered"
-                      ? "text-blue-400"
-                      : ""
-                  } text-sm font-medium text-gray-700 truncate`}
+                  className={`text-sm font-medium truncate ${
+                    value === "Preparing"
+                      ? "text-preparing"
+                      : value === "Ready"
+                      ? "text-ready"
+                      : value === "Delivered"
+                      ? "text-delivered"
+                      : "text-gray-700"
+                  }`}
                 >
                   {value}
                 </div>

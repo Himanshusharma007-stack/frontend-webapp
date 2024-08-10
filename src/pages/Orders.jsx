@@ -6,6 +6,7 @@ import { NoOrderFound } from "../components/NoOrderFound.jsx"; // Ensure correct
 import Notification from "../components/Notification";
 import moment from "moment";
 import { getOrdersDataByUserId } from "../services/Order";
+import statusChecker from "../utils/checkStatus.js";
 
 export function Orders() {
   const [ordersData, setOrdersData] = useState([]);
@@ -56,7 +57,7 @@ export function Orders() {
                 <OrderCard
                   key={order._id}
                   items={order.items || []}
-                  orderStatus={order?.isDelivered || false ? 'Delivered' : moment(new Date()).isAfter(moment(order?.prepareUpto)) ? 'Ready' : 'Preparing'}
+                  orderStatus={statusChecker.checkStatus(order)}
                   rawData={{
                     orderId: order._id,
                     amount: order.amount,
