@@ -8,10 +8,10 @@ export default function RestaurantOrders() {
   let header = [
     {
       title: "Name",
-      value: "user.name",
+      value: "userName",
     },
-    { title: "Class", value: "clas" },
-    { title: "Mobile", value: "mobile" },
+    { title: "Items", value: "items" },
+    { title: "Amount(in ₹)", value: "amount" },
     { title: "Action", value: "edit" },
   ];
 
@@ -40,6 +40,13 @@ export default function RestaurantOrders() {
     }
   }
 
+  // Compute the order data
+  const computedOrderData = useMemo(() => {
+    return orderData.map((data) => {
+      return { _id: data?._id, amount: data?.amount, items: data?.items?.map((item) => item?.name)?.join(', '), userName: data?.user?.name, userMobile: data?.user?.mobile, userEmail: data?.user?.email, status: '' }
+    })
+  }, [orderData]);
+
   useEffect(() => {
     getOrdersData();
   }, []);
@@ -56,12 +63,13 @@ export default function RestaurantOrders() {
   return (
     <>
       <div className="font-bold text-2xl text-black">Restaurant order tab</div>
-      <DynamicTable
-        header={header}
-        items={orderData}
-        refresh={() => refreshBtnClicked()}
-        isLoading={isLoading}
-      />
+      <div>{JSON.stringify(computedOrderData)}</div>
+        <DynamicTable
+          header={header}
+          items={computedOrderData}
+          refresh={() => refreshBtnClicked()}
+          isLoading={isLoading}
+        />
     </>
   );
 }
