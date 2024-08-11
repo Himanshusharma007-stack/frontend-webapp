@@ -1,4 +1,3 @@
-import { IconButton } from "@material-tailwind/react";
 import { Pencil, RotateCw } from "lucide-react";
 
 // Helper function to access nested properties
@@ -46,19 +45,12 @@ export default function DynamicTable(props) {
                 <tr key={rowIndex}>
                   {props.header.map((head, colIndex) => (
                     <td key={colIndex} className="p-4 border-b border-blue-gray-50">
-                      {head.value !== "edit" ? (
+                      {head.render ? (
+                        head.render(item)
+                      ) : (
                         <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                           {getNestedValue(head.value, item)}
                         </p>
-                      ) : (
-                        <button>
-                          <Pencil
-                            className="h-4"
-                            onClick={() => {
-                              props.editClicked(item);
-                            }}
-                          />
-                        </button>
                       )}
                     </td>
                   ))}
