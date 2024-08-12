@@ -41,4 +41,14 @@ export const getOrdersDataRestaurantId = async (id) => {
   }
 };
 
+export const updateOrderStatus = async ({ orderId, status }) => {
+  try {
+    const response = await apiClient.patch("/order/update", { orderId, status });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching restaurants:", error);
+    throw error.response.data;
+  }
+};
+
 export default apiClient;

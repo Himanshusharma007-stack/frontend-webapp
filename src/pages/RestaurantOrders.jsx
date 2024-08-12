@@ -12,15 +12,27 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
+// updateOrderStatus
+import { updateOrderStatus } from "../services/Order";
 
 export default function RestaurantOrders(props) {
   let [isLoading, setIsLoading] = useState(false);
   let [orderData, setOrderData] = useState([]);
   const [editDialog, setEditDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  const [status, setStatus] = useState(null)
+  const [status, setStatus] = useState(null);
+  const [editDialogLoading, setEditDialogLoading] = useState(false);
   let header = [
-    { title: "Username", value: "userName" },
+    {
+      title: "Username / Usermobile",
+      value: "userName",
+      render: (item) => (
+        <div className="text-sm font-normal">
+          <div>{item.userName}</div>
+          <div>{item.userMobile}</div>
+        </div>
+      ),
+    },
     { title: "Items", value: "items" },
     { title: "Amount(in ₹)", value: "amount" },
     {
@@ -52,6 +64,24 @@ export default function RestaurantOrders(props) {
       ),
     },
   ];
+
+  async function updateStatus() {
+    try {
+      setEditDialogLoading(true);
+      let res = await updateOrderStatus({ orderId: selectedItem._id, status });
+      console.log("res -------------------> ", res);
+      if (res.success) {
+        setEditDialog(false);
+        refreshBtnClicked();
+        setStatus(null);
+      }
+    } catch (error) {
+      console.error("Error while updating orders data ----> ", error);
+      throw new Error(error);
+    } finally {
+      setEditDialogLoading(false);
+    }
+  }
 
   function editClicked(item) {
     // console.log('edit clicked --- ',item);
@@ -114,7 +144,7 @@ export default function RestaurantOrders(props) {
         isLoading={isLoading}
       />
 
-      <Dialog open={editDialog} handler={() => setEditDialog(false)}>
+      <Dialog open={editDialog}>
         <DialogHeader>
           {selectedItem.userName}({selectedItem.userMobile})
         </DialogHeader>
@@ -127,7 +157,11 @@ export default function RestaurantOrders(props) {
             <strong> ₹{selectedItem?.amount} </strong> ?
           </div>
           <div className="mt-3">
-            <Select label="Status" value={status} onChange={(val) => setStatus(val)}>
+            <Select
+              label="Status"
+              value={status}
+              onChange={(val) => setStatus(val)}
+            >
               {[
                 // { name: "Ready", value: "isReady" },
                 { name: "Delivered", value: "isDelivered" },
@@ -144,6 +178,7 @@ export default function RestaurantOrders(props) {
           <Button
             variant="text"
             color="red"
+            disabled={editDialogLoading}
             onClick={() => setEditDialog(false)}
             className="mr-1"
           >
@@ -151,10 +186,12 @@ export default function RestaurantOrders(props) {
           </Button>
           <Button
             variant="gradient"
-            color="green"
-            onClick={() => setEditDialog(false)}
+            color="blue"
+            disabled={!status || editDialogLoading}
+            loading={editDialogLoading}
+            onClick={() => updateStatus()}
           >
-            <span>Confirm</span>
+            <span>Update</span>
           </Button>
         </DialogFooter>
       </Dialog>
