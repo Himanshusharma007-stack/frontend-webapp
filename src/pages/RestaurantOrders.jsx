@@ -58,8 +58,15 @@ export default function RestaurantOrders(props) {
       title: "Action",
       value: "edit",
       render: (item) => (
-        <button onClick={() => editClicked(item)}>
-          <Pencil className="h-4" />
+        <button
+          disabled={item.status === "Delivered" ? true : false}
+          onClick={() => editClicked(item)}
+        >
+          <Pencil
+            className={`h-4 ${
+              item.status === "Delivered" ? "text-gray-400" : ""
+            }`}
+          />
         </button>
       ),
     },

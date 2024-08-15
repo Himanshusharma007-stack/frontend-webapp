@@ -3,7 +3,10 @@ export default function MenuCard(props) {
     <div className="p-4">
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-7 md:col-span-10 p-4">
-          <h1 className="font-bold text-xl">{props.item.name}</h1>
+          <h1>
+            <span className="font-bold text-xl">{props.item.name}</span>{" "}
+            <span className="font-light">({props?.item?.size})</span>
+          </h1>
           <h1 className="font-bold text-l">₹ {props.item.price}</h1>
           <p className="font-light">{props.item.description}</p>
 
