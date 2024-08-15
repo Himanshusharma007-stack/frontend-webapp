@@ -203,7 +203,26 @@ export default function Checkout() {
               </ul>
             </div>
             <hr className="mt-6 border-gray-200" />
-            <ul className="mt-6 space-y-3">
+{/* 
+            <div>
+              <div className="mt-3 text-gray-700">Add ons</div>
+              <div className="text-gray-600 row-end-auto">
+                Ketchup
+                <span className="mt-4 text-xs font-medium ">
+                  <button className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200">
+                    -
+                  </button>
+                  &nbsp; &nbsp; 0 &nbsp; &nbsp;
+                  <button className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200">
+                    +
+                  </button>
+                </span>
+              </div>
+            </div>
+
+            <hr className="mt-6 border-gray-200" /> */}
+
+            <ul className="mt-4 space-y-3">
               <li className="flex items-center justify-between text-gray-900">
                 <p className="text-sm font-medium">Total</p>
                 <p className="text-sm font-bold">₹{totalAmount}</p>
