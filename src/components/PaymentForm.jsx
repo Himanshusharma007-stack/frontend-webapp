@@ -5,16 +5,18 @@ import { useSelector, useDispatch } from "react-redux";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
 import { reset } from "../features/cart/cartSlice";
 import { useAuth0 } from "@auth0/auth0-react";
+let backendUrl = import.meta.env.VITE_BACKEND_DOMAIN_URL
 
 const PaymentForm = (props) => {
   const cartArr = useSelector((state) => state.cart.value);
   const dispatch = useDispatch();
   const { user, loginWithRedirect } = useAuth0();
+  
 
   const handlePaymentSuccess = async (response) => {
     try {
       const verifyResponse = await axios.post(
-        "http://localhost:3000/order/payment/verify",
+        `${backendUrl}/order/payment/verify`,
         response
       );
       if (verifyResponse.status == 200) {
@@ -41,7 +43,7 @@ const PaymentForm = (props) => {
     e.preventDefault();
     try {
       const orderResponse = await axios.post(
-        "http://localhost:3000/order/payment",
+        `${backendUrl}/order/payment`,
         { amount: props.amount }
       );
       const orderData = orderResponse.data;
