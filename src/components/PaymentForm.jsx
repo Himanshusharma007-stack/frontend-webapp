@@ -49,15 +49,15 @@ const PaymentForm = (props) => {
         key: import.meta.env.VITE_RAZORPAY_key_id,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Your Company Name",
+        name: "Sahyog Sabka",
         description: "Test Transaction",
         order_id: orderData.id,
         handler: handlePaymentSuccess,
-        prefill: {
-          name: "Himanshu Sharma",
-          email: "hishrma02@gmail.com",
-          contact: "8449844583",
-        },
+        // prefill: {
+        //   name: "Himanshu Sharma",
+        //   email: "hishrma02@gmail.com",
+        //   contact: "8449844583",
+        // },
         theme: {
           color: "#F37254",
         },
