@@ -49,7 +49,7 @@ const PaymentForm = (props) => {
       const orderData = orderResponse.data;
 
       const options = {
-        key: "rzp_test_H6kJXc2zJz8jsi",
+        key: import.meta.env.VITE_RAZORPAY_key_id,
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Your Company Name",
