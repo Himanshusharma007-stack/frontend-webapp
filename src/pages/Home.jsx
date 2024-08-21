@@ -33,8 +33,8 @@ export default function Homepage() {
     setSearchQuery(query);
     const filtered = restaurantList.filter(
       (resto) =>
-        resto.name.toLowerCase().includes(query) ||
-        resto.cuisine.toLowerCase().includes(query)
+        resto.name?.toLowerCase()?.includes(query) ||
+        resto.cuisine?.toLowerCase()?.includes(query)
     );
     setFilteredRestaurants(filtered);
   }
