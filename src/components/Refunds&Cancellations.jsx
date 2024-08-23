@@ -6,6 +6,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { X } from "lucide-react";
 
 export default function RefundsandCancellation() {
   const [open, setOpen] = useState(false);
@@ -16,9 +17,19 @@ export default function RefundsandCancellation() {
       <Button onClick={handleOpen} variant="text" size="sm">
         Refunds / Cancellations
       </Button>
-      <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Refunds / Cancellations</DialogHeader>
-        <DialogBody>
+      <Dialog open={open} handler={handleOpen} className="overflow-scroll">
+        <DialogHeader className="flex justify-between items-center">
+          Refunds / Cancellations
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="rounded-full"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </Button>
+        </DialogHeader>
+        <DialogBody className="max-h-screen overflow-auto">
           <p>
             We understand that plans can change. Here is our policy for refunds
             and cancellations:
@@ -43,16 +54,6 @@ export default function RefundsandCancellation() {
             </li>
           </ul>
         </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-          >
-            <span>Close</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
     </>
   );

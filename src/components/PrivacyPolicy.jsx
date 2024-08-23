@@ -6,6 +6,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { X } from "lucide-react";
 
 export default function PrivacyPolicy() {
   const [open, setOpen] = useState(false);
@@ -16,9 +17,19 @@ export default function PrivacyPolicy() {
       <Button onClick={handleOpen} variant="text" size="sm">
         Privacy Policy
       </Button>
-      <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Privacy Policy</DialogHeader>
-        <DialogBody>
+      <Dialog open={open} handler={handleOpen} className="overflow-scroll">
+        <DialogHeader className="flex justify-between items-center">
+          Privacy Policy
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="rounded-full"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </Button>
+        </DialogHeader>
+        <DialogBody className="max-h-screen overflow-auto">
           <p>
             We value your privacy and are committed to protecting your personal
             data. This policy outlines how we collect, use, and safeguard your
@@ -52,16 +63,6 @@ export default function PrivacyPolicy() {
             </li>
           </ul>
         </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-          >
-            <span>Close</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
     </>
   );

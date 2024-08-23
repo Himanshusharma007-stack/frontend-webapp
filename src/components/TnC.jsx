@@ -6,6 +6,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { X } from "lucide-react";
 
 export default function TnC() {
   const [open, setOpen] = useState(false);
@@ -17,8 +18,18 @@ export default function TnC() {
         Terms and Conditions
       </Button>
       <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Terms and Conditions</DialogHeader>
-        <DialogBody>
+        <DialogHeader className="flex justify-between items-center">
+          Terms and Conditions
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="rounded-full"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </Button>
+        </DialogHeader>
+        <DialogBody className="max-h-screen overflow-auto">
           <p>
             Welcome to Sahyog Sabka. By using our website and services, you
             agree to the following terms and conditions:
@@ -55,16 +66,6 @@ export default function TnC() {
             </li>
           </ul>
         </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-          >
-            <span>Close</span>
-          </Button>
-        </DialogFooter>
       </Dialog>
     </>
   );
