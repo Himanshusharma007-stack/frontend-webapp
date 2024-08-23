@@ -11,6 +11,9 @@ import PaymentForm from "../components/PaymentForm";
 import Notification from "../components/Notification";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import TnC from "../components/TnC";
+import PrivacyPolicy from "../components/PrivacyPolicy";
+import RefundsandCancellation from "../components/Refunds&Cancellations";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -124,6 +127,17 @@ export default function Checkout() {
                         mobile={formData.mobile}
                       />
                     </div>
+                    <div className="grid grid-cols-3 text-xs mt-6 text-center">
+                      <div>
+                        <TnC />
+                      </div>
+                      <div>
+                        <PrivacyPolicy />
+                      </div>
+                      <div>
+                        <RefundsandCancellation />
+                      </div>
+                    </div>
                   </form>
 
                   {makepayment && (
@@ -203,7 +217,7 @@ export default function Checkout() {
               </ul>
             </div>
             <hr className="mt-6 border-gray-200" />
-{/* 
+            {/* 
             <div>
               <div className="mt-3 text-gray-700">Add ons</div>
               <div className="text-gray-600 row-end-auto">
