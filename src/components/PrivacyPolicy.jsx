@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
       <Button onClick={handleOpen} variant="text" size="sm">
         Privacy Policy
       </Button>
-      <Dialog open={open} handler={handleOpen} className="overflow-scroll">
+      <Dialog open={open} handler={handleOpen} >
         <DialogHeader className="flex justify-between items-center">
           Privacy Policy
           <Button
