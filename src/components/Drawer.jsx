@@ -50,7 +50,7 @@ export default function DrawerComp() {
         <div className="mb-2 flex items-center justify-between p-4">
           <Typography variant="h5" color="blue-gray">
             <Link to="/" onClick={closeDrawer}>
-              Sahyog Sabka
+              DriveFood
             </Link>
           </Typography>
           <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
