@@ -1,3 +1,5 @@
+import { Button } from "@material-tailwind/react";
+
 export default function MenuCard(props) {
   return (
     <div className="p-4">
@@ -11,27 +13,52 @@ export default function MenuCard(props) {
           <p className="font-light">{props.item.description}</p>
 
           {!props.item?.quantity ? (
-            <button
-              className="mt-4 uppercase font-bold text-green-600	border-solid border-2 p-1 rounded-lg px-12"
+            // <button
+            //   className="mt-4 uppercase font-bold text-green-600	border-solid border-2 p-1 rounded-lg px-12"
+            //   onClick={() => props.addClicked(props.item)}
+            // >
+            //   Add
+            // </button>
+            <Button
+              size="md"
+              color="green"
+              className="mt-3"
+              variant="outlined"
               onClick={() => props.addClicked(props.item)}
             >
               Add
-            </button>
+            </Button>
           ) : (
             <div className="mt-4 font-bold text-green-600">
-              <button
+              {/* <button
                 className="	border-solid border-2 p-1 rounded-lg px-5"
                 onClick={() => props.decreamentBtnClicked(props.item)}
               >
                 -
-              </button>
-              <span className="mx-2"> {props.item?.quantity} </span>
-              <button
+              </button> */}
+              <Button
+                size="sm"
+                color="green"
+                variant="outlined"
+                onClick={() => props.decreamentBtnClicked(props.item)}
+              >
+                -
+              </Button>
+              <span className="sm:mx-2"> {props.item?.quantity} </span>
+              {/* <button
                 className="	border-solid border-2 p-1 rounded-lg px-5"
                 onClick={() => props.increamentBtnClicked(props.item)}
               >
                 +
-              </button>
+              </button> */}
+              <Button
+                size="sm"
+                color="green"
+                variant="outlined"
+                onClick={() => props.increamentBtnClicked(props.item)}
+              >
+                +
+              </Button>
             </div>
           )}
         </div>
