@@ -95,7 +95,7 @@ export default function Navbar() {
               <div className="px-5 pb-6 pt-5">
                 <div className="flex items-center justify-between">
                   <div className="inline-flex items-center space-x-2">
-                    <button className="font-bold">Sahyog Sabka</button>
+                    <button className="font-bold">DriveFood</button>
                   </div>
                   <div className="-mr-2">
                     {location.pathname !== "/restaurant/items-list" && (

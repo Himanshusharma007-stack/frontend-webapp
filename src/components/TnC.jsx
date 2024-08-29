@@ -31,7 +31,7 @@ export default function TnC() {
         </DialogHeader>
         <DialogBody className="max-h-screen overflow-auto">
           <p>
-            Welcome to Sahyog Sabka. By using our website and services, you
+            Welcome to DriveFood. By using our website and services, you
             agree to the following terms and conditions:
           </p>
           <ul>

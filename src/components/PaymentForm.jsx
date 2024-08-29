@@ -49,7 +49,7 @@ const PaymentForm = (props) => {
         key: import.meta.env.VITE_RAZORPAY_key_id,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Sahyog Sabka",
+        name: "DriveFood",
         description: "Test Transaction",
         order_id: orderData.id,
         handler: handlePaymentSuccess,
