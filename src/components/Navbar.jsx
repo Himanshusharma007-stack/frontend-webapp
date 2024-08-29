@@ -43,7 +43,7 @@ export default function Navbar() {
           isDrawerOpen ? "blur-sm" : ""
         }`}
       >
-        <div className="inline-flex items-center space-x-2">
+        <div className="inline-flex items-center">
           <DrawerComp isOpen={isDrawerOpen} onClose={closeDrawer} />
         </div>
 
