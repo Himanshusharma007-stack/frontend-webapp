@@ -14,6 +14,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import TnC from "../components/TnC";
 import PrivacyPolicy from "../components/PrivacyPolicy";
 import RefundsandCancellation from "../components/Refunds&Cancellations";
+import { Button } from "@material-tailwind/react";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -182,21 +183,35 @@ export default function Checkout() {
                           </p>
                         </div>
                         <p className="mt-4 text-xs font-medium ">
-                          <button
+                          {/* <button
                             className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200"
                             onClick={() => removeFromCartClicked(cartItem)}
                           >
                             -
-                          </button>
+                          </button> */}
+                          <Button
+                            size="sm"
+                            variant="text"
+                            onClick={() => removeFromCartClicked(cartItem)}
+                          >
+                            -
+                          </Button>
                           &nbsp; &nbsp;
                           {cartItem.quantity}
                           &nbsp; &nbsp;
-                          <button
+                          {/* <button
                             className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200"
                             onClick={() => addToCartClicked(cartItem)}
                           >
                             +
-                          </button>
+                          </button> */}
+                          <Button
+                            size="sm"
+                            variant="text"
+                            onClick={() => addToCartClicked(cartItem)}
+                          >
+                            +
+                          </Button>
                         </p>
                       </div>
                     </div>
