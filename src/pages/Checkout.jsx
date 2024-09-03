@@ -154,13 +154,13 @@ export default function Checkout() {
           {/* Product List */}
           <div className="bg-gray-100 px-5 py-6 md:px-8">
             <div className="flow-root">
-              {/* {JSON.stringify(cartArr)} */}
               <ul className="-my-7 divide-y divide-gray-200">
                 {cartArr.map((cartItem) => (
                   <li
                     key={cartItem._id}
                     className="flex items-stretch justify-between space-x-5 py-7"
                   >
+                    {/* {JSON.stringify(cartItem)} */}
                     <div className="flex flex-1 items-stretch">
                       <div className="flex-shrink-0">
                         {cartItem.imageUrl ? (
@@ -183,12 +183,6 @@ export default function Checkout() {
                           </p>
                         </div>
                         <p className="mt-4 text-xs font-medium ">
-                          {/* <button
-                            className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200"
-                            onClick={() => removeFromCartClicked(cartItem)}
-                          >
-                            -
-                          </button> */}
                           <Button
                             size="sm"
                             variant="text"
@@ -199,12 +193,6 @@ export default function Checkout() {
                           &nbsp; &nbsp;
                           {cartItem.quantity}
                           &nbsp; &nbsp;
-                          {/* <button
-                            className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200"
-                            onClick={() => addToCartClicked(cartItem)}
-                          >
-                            +
-                          </button> */}
                           <Button
                             size="sm"
                             variant="text"
@@ -217,7 +205,7 @@ export default function Checkout() {
                     </div>
                     <div className="ml-auto flex flex-col items-end justify-between">
                       <p className="text-right text-sm font-bold text-gray-900">
-                        ₹{cartItem.price}
+                        ₹{cartItem.size.price}
                       </p>
                       <button
                         type="button"
@@ -232,25 +220,6 @@ export default function Checkout() {
               </ul>
             </div>
             <hr className="mt-6 border-gray-200" />
-            {/* 
-            <div>
-              <div className="mt-3 text-gray-700">Add ons</div>
-              <div className="text-gray-600 row-end-auto">
-                Ketchup
-                <span className="mt-4 text-xs font-medium ">
-                  <button className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200">
-                    -
-                  </button>
-                  &nbsp; &nbsp; 0 &nbsp; &nbsp;
-                  <button className="w-10 bg-slate-300 rounded-lg hover:scale-110 duration-200">
-                    +
-                  </button>
-                </span>
-              </div>
-            </div>
-
-            <hr className="mt-6 border-gray-200" /> */}
-
             <ul className="mt-4 space-y-3">
               <li className="flex items-center justify-between text-gray-900">
                 <p className="text-sm font-medium">Total</p>
