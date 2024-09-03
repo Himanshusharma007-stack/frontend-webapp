@@ -5,6 +5,16 @@ import MenuCard from "../components/MenuCard";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { add, increament, decreament } from "../features/cart/cartSlice";
+import {
+  Button,
+  Dialog,
+  Typography,
+  DialogBody,
+  DialogHeader,
+  DialogFooter,
+} from "@material-tailwind/react";
+import { Select, Option } from "@material-tailwind/react";
+import { X } from "lucide-react";
 
 export default function RestoMenu() {
   const { id } = useParams();
@@ -12,11 +22,13 @@ export default function RestoMenu() {
   const [menus, setMenus] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredList, setFilteredList] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [sizeVal, setSizeVal] = useState({});
 
   const location = useLocation();
   const { data } = location.state || {};
 
-  // store
   const cart = useSelector((state) => state.cart.value);
   const dispatch = useDispatch();
 
@@ -41,22 +53,38 @@ export default function RestoMenu() {
         resto.name.toLowerCase().includes(query) ||
         resto.description.toLowerCase().includes(query)
     );
-    if (filtered?.length) {
-      setFilteredList(filtered);
-    } else {
-      setFilteredList([]);
-    }
+    setFilteredList(filtered);
+  }
+
+  function handleOpen(item) {
+    setSelectedItem(item);
+    setOpen(!open);
   }
 
   function addClicked(item) {
-    dispatch(add(item));
+    let computedItem = { ...item };
+    computedItem["size"] = sizeVal;
+    console.log("computedItem --- ", computedItem);
+
+    dispatch(add(computedItem));
+    setOpen(false);
+    setSizeVal({});
   }
+
   function decreamentBtnClicked(item) {
     dispatch(decreament(item));
   }
+
   function increamentBtnClicked(item) {
     dispatch(increament(item));
   }
+
+  const handleSizeChange = (val) => {
+    if (selectedItem && selectedItem.size) {
+      const selectedSize = selectedItem.size.find((item) => item.value === val);
+      setSizeVal(selectedSize || {}); // Set an empty object if no size is found
+    }
+  };
 
   useEffect(() => {
     getMenuByRestoId();
@@ -70,7 +98,7 @@ export default function RestoMenu() {
       </div>
       <input
         className="flex mt-4 h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-        type="email"
+        type="text"
         placeholder="Search for dishes"
         value={searchQuery}
         onChange={handleSearchChange}
@@ -81,20 +109,54 @@ export default function RestoMenu() {
           No dish found, with the given title/description.
         </div>
       ) : (
-        filteredList.map((elem, index) => {
-          return (
-            <div key={index}>
-              <MenuCard
-                item={cart.find((item) => item._id == elem._id) || elem}
-                addClicked={(item) => addClicked(item)}
-                decreamentBtnClicked={(item) => decreamentBtnClicked(item)}
-                increamentBtnClicked={(item) => increamentBtnClicked(item)}
-              />
-              {index < filteredList.length - 1 && <hr />}
-            </div>
-          );
-        })
+        filteredList.map((elem, index) => (
+          <div key={index}>
+            <MenuCard
+              item={cart.find((item) => item._id === elem._id) || elem}
+              addClicked={() => handleOpen(elem)}
+              decreamentBtnClicked={() => decreamentBtnClicked(elem)}
+              increamentBtnClicked={() => increamentBtnClicked(elem)}
+            />
+            {index < filteredList.length - 1 && <hr />}
+          </div>
+        ))
       )}
+
+      <Dialog open={open} handler={handleOpen} className="p-4">
+        <DialogHeader className="flex justify-between items-center">
+          {selectedItem?.name}
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="rounded-full"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </Button>
+        </DialogHeader>
+        <DialogBody>
+          <Select
+            label="Select Size"
+            value={sizeVal.value || ""}
+            onChange={(val) => handleSizeChange(val)}
+          >
+            {selectedItem?.size?.map((item, index) => (
+              <Option key={index} value={item.value}>
+                {item.label || item.value} {`( ₹${item.price} )`}
+              </Option>
+            ))}
+          </Select>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => addClicked(selectedItem)}
+          >
+            Add to Cart
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </>
   );
 }

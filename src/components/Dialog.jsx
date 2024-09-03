@@ -15,13 +15,13 @@ import {
   updateFoodItem,
 } from "../services/FoodItems.js";
 import { Pencil } from "lucide-react";
+import Select from "react-select";
 
 export function DialogBox(props) {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = React.useState({
     name: "",
     description: "",
-    price: "",
     size: null,
     category: null,
     isVeg: true,
@@ -45,17 +45,47 @@ export function DialogBox(props) {
     }
   }, []);
 
+  const sizeOptions = [
+    { value: "small-7'", label: "Small 7'" },
+    { value: "medium-10'", label: "Medium 10'" },
+    { value: "large-12'", label: "Large 12'" },
+  ];
+
+  const handleSizeChange = (selectedOptions) => {
+    const sizes = selectedOptions
+      ? selectedOptions.map((option) => {
+          return { label: option.label, value: option.value, price: 0 };
+        })
+      : [];
+    setFormData((prevState) => ({
+      ...prevState,
+      size: sizes,
+    }));
+  };
+
+  const handlePriceChange = (index, newPrice) => {
+    const updatedSizes = formData.size.map((item, i) => {
+      if (i === index) {
+        return { ...item, price: newPrice }; // Update the price of the selected size
+      }
+      return item;
+    });
+    setFormData((prevState) => ({
+      ...prevState,
+      size: updatedSizes,
+    }));
+  };
+
   const handleOpen = () => setOpen(!open);
 
   const validate = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
-    if (!formData.description) newErrors.description = "Description is required";
-    if (!formData.price) newErrors.price = "Price is required";
-    else if (isNaN(formData.price)) newErrors.price = "Price must be a number";
-    // if (formData.image && formData.image.size > 7 * 1024 * 1024) {
-    //   newErrors.image = "Image size must be below 7MB";
-    // }
+    if (!formData.description)
+      newErrors.description = "Description is required";
+    if (!formData.category) newErrors.category = "Category is required";
+    if (!formData.size || formData.size.length === 0)
+      newErrors.size = "Size is required";
     return newErrors;
   };
 
@@ -65,31 +95,35 @@ export function DialogBox(props) {
       setErrors(newErrors);
       return;
     }
-  
+
     let data = localStorageFunctions.getDatafromLocalstorage("data");
     if (data.password) {
-      delete data.password
+      delete data.password;
     }
     let obj = {
       ...formData,
       restaurant: data, // No need to spread data here
     };
-  
+
     // Create a FormData object to send file data
     const formDataToSend = new FormData();
     for (const key in obj) {
-      if (typeof obj[key] === 'object' && obj[key] !== null && key !== 'image') {
+      if (
+        typeof obj[key] === "object" &&
+        obj[key] !== null &&
+        key !== "image"
+      ) {
         formDataToSend.append(key, JSON.stringify(obj[key]));
       } else {
         formDataToSend.append(key, obj[key]);
       }
     }
-  
+
     try {
       setIsLoading(true);
       let res;
       if (props.data) {
-        formDataToSend.append('_id', props.data._id);
+        formDataToSend.append("_id", props.data._id);
         res = await updateFoodItem(formDataToSend); // Update to send FormData
       } else {
         res = await createFoodItem(formDataToSend); // Update to send FormData
@@ -104,7 +138,7 @@ export function DialogBox(props) {
       setIsLoading(false);
     }
   }
-  
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
@@ -147,19 +181,17 @@ export function DialogBox(props) {
       setFormData({
         name: props.data?.name || "",
         description: props.data?.description || "",
-        price: props.data?.price || "",
         size: props.data?.size || null,
         category: props.data?.category || null,
         isVeg: props.data?.isVeg ?? true,
         inStock: props.data?.inStock ?? true,
         image: null, // Reset the image field when opening the dialog
       });
-      getCategoryData()
+      getCategoryData();
     } else {
       setFormData({
         name: "",
         description: "",
-        price: "",
         size: null,
         category: null,
         isVeg: true,
@@ -174,7 +206,11 @@ export function DialogBox(props) {
       {props?.data ? (
         <Pencil className="h-4" onClick={handleOpen} />
       ) : (
-        <Button onClick={handleOpen} variant="gradient" disabled={props.isLoading}>
+        <Button
+          onClick={handleOpen}
+          variant="gradient"
+          disabled={props.isLoading}
+        >
           + Add Item
         </Button>
       )}
@@ -185,7 +221,7 @@ export function DialogBox(props) {
         </DialogHeader>
         <DialogBody>
           <div className="grid grid-cols-2 gap-3">
-            {["name", "description", "price"].map((field) => (
+            {["name", "description"].map((field) => (
               <div key={field}>
                 <Input
                   label={field.charAt(0).toUpperCase() + field.slice(1)}
@@ -200,24 +236,6 @@ export function DialogBox(props) {
                 )}
               </div>
             ))}
-            <div className="relative min-w-[200px]">
-              <select
-                className="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                value={formData.size || ""}
-                onChange={handleChange}
-                name="size"
-              >
-                <option value="" disabled>
-                  Select Size
-                </option>
-                <option value="small-7'">Small 7'</option>
-                <option value="medium-10'">Medium 10'</option>
-                <option value="large-12'">Large 12'</option>
-              </select>
-              <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex max-h-[4px] w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                Select Size
-              </label>
-            </div>
 
             <div className="relative min-w-[200px]">
               <select
@@ -241,9 +259,6 @@ export function DialogBox(props) {
             </div>
 
             <div className="space-x-8 mt-2">
-              {/* <label className="block text-sm font-medium text-gray-700">
-                Upload Image
-              </label> */}
               <input
                 type="file"
                 name="image"
@@ -257,8 +272,29 @@ export function DialogBox(props) {
               />
             </div>
 
+            <div className="relative min-w-[200px]">
+              <Select
+                isMulti
+                closeMenuOnSelect={false}
+                options={sizeOptions}
+                value={sizeOptions.filter((option) =>
+                  formData.size?.some(
+                    (selected) => selected.value === option.value
+                  )
+                )}
+                onChange={handleSizeChange}
+                className="react-select-container"
+                placeholder="Select Size"
+                classNamePrefix="react-select"
+              />
+            </div>
+
             {[
-              { name: "isVeg", label: "Is Veg", bgClass: "checked:bg-[#2ec946] bg-deep-orange-900" },
+              {
+                name: "isVeg",
+                label: "Is Veg",
+                bgClass: "checked:bg-[#2ec946] bg-deep-orange-900",
+              },
               { name: "inStock", label: "In Stock" },
             ].map((switchField) => (
               <div key={switchField.name} className="space-x-8 mt-2">
@@ -272,13 +308,40 @@ export function DialogBox(props) {
                 />
               </div>
             ))}
+
+            {formData.size?.map((item, index) => (
+              <div key={index} className="my-2">
+                <Input
+                  label={`Price (in ₹) for ${item.label}`}
+                  size="lg"
+                  name={item.price}
+                  value={item.price}
+                  onChange={(e) => handlePriceChange(index, e.target.value)}
+                />
+                {errors[item.label] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors[item.label]}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="text" color="red" onClick={handleOpen} className="mr-1">
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="mr-1"
+          >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="blue" onClick={addOrUpdateBtnClicked} loading={isLoading}>
+          <Button
+            variant="gradient"
+            color="blue"
+            onClick={addOrUpdateBtnClicked}
+            loading={isLoading}
+          >
             <span>{props?.data ? "Update" : "Add"}</span>
           </Button>
         </DialogFooter>
