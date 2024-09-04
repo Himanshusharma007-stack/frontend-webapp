@@ -113,6 +113,11 @@ export default function RestoMenu() {
           <div key={index}>
             <MenuCard
               item={cart.find((item) => item._id === elem._id) || elem}
+              priceRange={elem.size.length == 3
+                ? `${elem?.size[0]?.price} - ${elem?.size[2]?.price}`
+                : elem.size.length == 2
+                ? `${elem?.size[0]?.price} - ${elem?.size[1]?.price}`
+                : elem?.size[0]?.price || 0}
               addClicked={() => handleOpen(elem)}
               decreamentBtnClicked={() => decreamentBtnClicked(elem)}
               increamentBtnClicked={() => increamentBtnClicked(elem)}

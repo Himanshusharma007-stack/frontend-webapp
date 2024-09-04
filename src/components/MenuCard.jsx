@@ -8,14 +8,7 @@ export default function MenuCard(props) {
           <h1>
             <span className="font-bold text-xl">{props.item.name}</span>{" "}
           </h1>
-          <h1 className="font-bold text-l">
-            ₹{" "}
-            {props.item.size.length == 3
-              ? `${props.item.size[0].price} - ${props.item.size[2].price}`
-              : props.item.size.length == 2
-              ? `${props.item.size[0].price} - ${props.item.size[1].price}`
-              : props.item.size[0].price || 0}
-          </h1>
+          <h1 className="font-bold text-l">₹ {props.priceRange}</h1>
           <p className="font-light">{props.item.description}</p>
 
           {!props.item?.quantity ? (
