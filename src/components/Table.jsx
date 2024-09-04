@@ -2,7 +2,7 @@ import { Card, Typography, Button } from "@material-tailwind/react";
 import { DialogBox } from "../components/Dialog";
 import { RotateCw } from "lucide-react";
 const TABLE_HEAD = [
-  "Name / Price (in ₹)",
+  "Name",
   "Image",
   "Description",
   "In Stock",
