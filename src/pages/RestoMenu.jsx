@@ -8,7 +8,6 @@ import { add, increament, decreament } from "../features/cart/cartSlice";
 import {
   Button,
   Dialog,
-  Typography,
   DialogBody,
   DialogHeader,
   DialogFooter,

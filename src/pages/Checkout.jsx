@@ -14,6 +14,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import TnC from "../components/TnC";
 import PrivacyPolicy from "../components/PrivacyPolicy";
 import RefundsandCancellation from "../components/Refunds&Cancellations";
+import ShippingPolicy from "../components/ShippingPolicy";
 import { Button } from "@material-tailwind/react";
 
 export default function Checkout() {
@@ -128,7 +129,7 @@ export default function Checkout() {
                         mobile={formData.mobile}
                       />
                     </div>
-                    <div className="grid grid-cols-3 text-xs mt-6 text-center">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 text-xs mt-6 text-center">
                       <div>
                         <TnC />
                       </div>
@@ -137,6 +138,9 @@ export default function Checkout() {
                       </div>
                       <div>
                         <RefundsandCancellation />
+                      </div>
+                      <div className="sm:col-start-2">
+                        <ShippingPolicy />
                       </div>
                     </div>
                   </form>
