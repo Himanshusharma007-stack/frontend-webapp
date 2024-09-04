@@ -3,8 +3,7 @@ import {
   Button,
   Dialog,
   DialogHeader,
-  DialogBody,
-  DialogFooter,
+  DialogBody
 } from "@material-tailwind/react";
 import { X } from "lucide-react";
 
