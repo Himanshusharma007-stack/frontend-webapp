@@ -182,6 +182,9 @@ export default function Checkout() {
                       <div className="ml-5 flex flex-col justify-between">
                         <div className="flex-1">
                           <p className="text-sm font-bold">{cartItem.name}</p>
+                          <p className="text-xs font-light text-slate-200	">
+                            {cartItem.size?.label}
+                          </p>
                           <p className="text-xs font-semibold line-clamp-3">
                             {cartItem.description}
                           </p>
