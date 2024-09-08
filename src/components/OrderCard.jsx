@@ -1,5 +1,3 @@
-import theme from "../theme";
-
 export default function OrderCard(props) {
   return (
     <div className="mt-3 flex flex-col overflow-hidden rounded-lg border border-gray-300 md:flex-row">
@@ -73,7 +71,7 @@ export default function OrderCard(props) {
 
                 <div className="ml-auto flex flex-col items-end justify-between">
                   <p className="text-right text-sm font-bold text-gray-900">
-                    ₹{item.price}
+                    ₹{item.size?.price}
                   </p>
                 </div>
               </li>
