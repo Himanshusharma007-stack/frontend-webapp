@@ -114,7 +114,7 @@ export function DialogBox(props) {
         key !== "image"
       ) {
         formDataToSend.append(key, JSON.stringify(obj[key]));
-      } else {
+      } else { 
         formDataToSend.append(key, obj[key]);
       }
     }
