@@ -13,7 +13,7 @@ const PaymentForm = (props) => {
   const { user, loginWithRedirect } = useAuth0();
 
   const handlePaymentSuccess = async (response) => {
-    try {
+    try { 
       const verifyResponse = await axios.post(
         `${backendUrl}/order/payment/verify`,
         response
