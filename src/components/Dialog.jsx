@@ -16,6 +16,7 @@ import {
 } from "../services/FoodItems.js";
 import { Pencil } from "lucide-react";
 import Select from "react-select";
+import { X } from "lucide-react";
 
 export function DialogBox(props) {
   const [open, setOpen] = React.useState(false);
@@ -215,8 +216,16 @@ export function DialogBox(props) {
       )}
 
       <Dialog open={open}>
-        <DialogHeader>
+        <DialogHeader className="flex justify-between items-center">
           {props?.data ? <span>Edit Item</span> : <span>Add Item</span>}
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="rounded-full"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </Button>
         </DialogHeader>
         <DialogBody>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -310,14 +319,14 @@ export function DialogBox(props) {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button
+          {/* <Button
             variant="text"
             color="red"
             onClick={handleOpen}
             className="mr-1"
           >
             Cancel
-          </Button>
+          </Button> */}
           <Button
             variant="gradient"
             color="green"
