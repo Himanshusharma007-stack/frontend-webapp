@@ -7,6 +7,7 @@ import Notification from "../components/Notification";
 import moment from "moment";
 import { getOrdersDataByUserId } from "../services/Order";
 import statusChecker from "../utils/checkStatus.js";
+import localStorageFunctions from "../utils/localStorageFunctions.js";
 
 export function Orders() {
   const [ordersData, setOrdersData] = useState([]);
@@ -16,7 +17,8 @@ export function Orders() {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        let ordersData = await getOrdersDataByUserId("666d61f2f447d3be1433fb79");
+        let userId = localStorageFunctions.getDatafromLocalstorage("userId");
+        let ordersData = await getOrdersDataByUserId(userId);
         setOrdersData(ordersData?.data || []);
       } catch (error) {
         console.error("Error --> ", error);

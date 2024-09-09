@@ -122,7 +122,7 @@ export default function RestaurantItems() {
               />
             </TabPanel>
             <TabPanel value={"orders"}>
-              <RestaurantOrders />
+              <RestaurantOrders restaurantData={data} />
             </TabPanel>
 
           </TabsBody>
