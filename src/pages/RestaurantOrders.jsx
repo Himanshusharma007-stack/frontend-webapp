@@ -100,7 +100,7 @@ export default function RestaurantOrders(props) {
     try {
       setIsLoading(true);
       let { data } = await getOrdersDataRestaurantId(
-        "66754cba683f5fe524cd2ea6"
+        props.restaurantData?._id
       );
       console.log("orders data ----------------> ", data);
       setOrderData(data);
