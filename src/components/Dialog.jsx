@@ -26,7 +26,7 @@ export function DialogBox(props) {
     category: null,
     isVeg: true,
     inStock: true,
-    image: null, // Add image to formData state
+    image: null,
   });
   const [errors, setErrors] = React.useState({});
   const [categoryData, setCategoryData] = React.useState([]);
@@ -36,14 +36,12 @@ export function DialogBox(props) {
     try {
       if (!categoryData.length) {
         let { data } = await getCategories();
-        console.log("getCategoryData ======> ", data);
         setCategoryData(data);
       }
     } catch (error) {
-      console.error("Error -------> ", error);
-      throw new Error(error);
+      console.error("Error:", error);
     }
-  }, []);
+  }, [categoryData.length]);
 
   const sizeOptions = [
     { value: "small-7'", label: "Small 7'" },
@@ -53,9 +51,11 @@ export function DialogBox(props) {
 
   const handleSizeChange = (selectedOptions) => {
     const sizes = selectedOptions
-      ? selectedOptions.map((option) => {
-          return { label: option.label, value: option.value, price: 0 };
-        })
+      ? selectedOptions.map((option) => ({
+          label: option.label,
+          value: option.value,
+          price: 0,
+        }))
       : [];
     setFormData((prevState) => ({
       ...prevState,
@@ -66,7 +66,7 @@ export function DialogBox(props) {
   const handlePriceChange = (index, newPrice) => {
     const updatedSizes = formData.size.map((item, i) => {
       if (i === index) {
-        return { ...item, price: newPrice }; // Update the price of the selected size
+        return { ...item, price: newPrice };
       }
       return item;
     });
@@ -102,10 +102,9 @@ export function DialogBox(props) {
     }
     let obj = {
       ...formData,
-      restaurant: data, // No need to spread data here
+      restaurant: data,
     };
 
-    // Create a FormData object to send file data
     const formDataToSend = new FormData();
     for (const key in obj) {
       if (
@@ -114,7 +113,7 @@ export function DialogBox(props) {
         key !== "image"
       ) {
         formDataToSend.append(key, JSON.stringify(obj[key]));
-      } else { 
+      } else {
         formDataToSend.append(key, obj[key]);
       }
     }
@@ -124,12 +123,12 @@ export function DialogBox(props) {
       let res;
       if (props.data) {
         formDataToSend.append("_id", props.data._id);
-        res = await updateFoodItem(formDataToSend); // Update to send FormData
+        res = await updateFoodItem(formDataToSend);
       } else {
-        res = await createFoodItem(formDataToSend); // Update to send FormData
+        res = await createFoodItem(formDataToSend);
       }
       if (res.success) {
-        setOpen(false); // Close the dialog on successful submission
+        setOpen(false);
         props.getMenuByRestoId();
       }
     } catch (error) {
@@ -144,7 +143,7 @@ export function DialogBox(props) {
     if (type === "file") {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0], // Store the file in formData
+        [name]: files[0],
       }));
     } else if (name === "category") {
       const selectedCategory = categoryData.find(
@@ -185,7 +184,7 @@ export function DialogBox(props) {
         category: props.data?.category || null,
         isVeg: props.data?.isVeg ?? true,
         inStock: props.data?.inStock ?? true,
-        image: null, // Reset the image field when opening the dialog
+        image: null,
       });
       getCategoryData();
     } else {
@@ -196,10 +195,10 @@ export function DialogBox(props) {
         category: null,
         isVeg: true,
         inStock: true,
-        image: null, // Reset the image field when closing the dialog
+        image: null,
       });
     }
-  }, [open, props.data]);
+  }, [open, props.data, getCategoryData]);
 
   return (
     <>
@@ -220,7 +219,7 @@ export function DialogBox(props) {
           {props?.data ? <span>Edit Item</span> : <span>Add Item</span>}
         </DialogHeader>
         <DialogBody>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {["name", "description"].map((field) => (
               <div key={field}>
                 <Input
@@ -237,9 +236,9 @@ export function DialogBox(props) {
               </div>
             ))}
 
-            <div className="relative min-w-[200px]">
+            <div className="relative">
               <select
-                className="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 empty:!bg-gray-900 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                className="peer h-full w-full rounded border border-blue-gray-200 bg-transparent px-3 py-2.5 text-sm text-blue-gray-700 outline-none transition-all focus:border-2 focus:border-gray-900 "
                 value={formData.category?._id || ""}
                 onChange={handleChange}
                 name="category"
@@ -253,9 +252,6 @@ export function DialogBox(props) {
                   </option>
                 ))}
               </select>
-              <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex max-h-[4px] w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                Category
-              </label>
             </div>
 
             <div className="space-x-8 mt-2">
@@ -263,16 +259,11 @@ export function DialogBox(props) {
                 type="file"
                 name="image"
                 onChange={handleChange}
-                className="block w-full text-sm text-gray-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-violet-50 file:text-violet-700
-                hover:file:bg-violet-100"
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
               />
             </div>
 
-            <div className="relative min-w-[200px]">
+            <div className="relative">
               <Select
                 isMulti
                 closeMenuOnSelect={false}
@@ -290,11 +281,7 @@ export function DialogBox(props) {
             </div>
 
             {[
-              {
-                name: "isVeg",
-                label: "Is Veg",
-                bgClass: "checked:bg-[#2ec946] bg-deep-orange-900",
-              },
+              { name: "isVeg", label: "Is Veg" },
               { name: "inStock", label: "In Stock" },
             ].map((switchField) => (
               <div key={switchField.name} className="space-x-8 mt-2">
@@ -304,25 +291,20 @@ export function DialogBox(props) {
                   label={switchField.label}
                   onChange={handleSwitchChange(switchField.name)}
                   ripple={true}
-                  className={switchField.bgClass}
+                  className="checked:bg-[#2ec946] bg-deep-orange-900"
                 />
               </div>
             ))}
 
             {formData.size?.map((item, index) => (
-              <div key={index} className="my-2">
+              <div key={index}>
                 <Input
-                  label={`Price (in ₹) for ${item.label}`}
-                  size="lg"
-                  name={item.price}
+                  type="number"
+                  name="price"
+                  label={`Price for ${item.label}`}
                   value={item.price}
                   onChange={(e) => handlePriceChange(index, e.target.value)}
                 />
-                {errors[item.label] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors[item.label]}
-                  </p>
-                )}
               </div>
             ))}
           </div>
@@ -334,15 +316,15 @@ export function DialogBox(props) {
             onClick={handleOpen}
             className="mr-1"
           >
-            <span>Cancel</span>
+            Cancel
           </Button>
           <Button
             variant="gradient"
-            color="blue"
+            color="green"
+            disabled={isLoading}
             onClick={addOrUpdateBtnClicked}
-            loading={isLoading}
           >
-            <span>{props?.data ? "Update" : "Add"}</span>
+            {isLoading ? "Saving..." : "Save"}
           </Button>
         </DialogFooter>
       </Dialog>
