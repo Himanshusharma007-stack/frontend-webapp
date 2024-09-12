@@ -212,7 +212,7 @@ export default function Checkout() {
                     </div>
                     <div className="ml-auto flex flex-col items-end justify-between">
                       <p className="text-right text-sm font-bold text-gray-900">
-                        ₹{cartItem.size.price}
+                        ₹{cartItem.size?.price || cartItem.price}
                       </p>
                       <button
                         type="button"

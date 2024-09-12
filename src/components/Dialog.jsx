@@ -252,7 +252,6 @@ export function DialogBox(props) {
           </Button>
         </DialogHeader>
         <DialogBody>
-          <div>{JSON.stringify(formData)}</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {["name", "description"].map((field) => (
               <div key={field}>

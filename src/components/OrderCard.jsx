@@ -71,7 +71,7 @@ export default function OrderCard(props) {
 
                 <div className="ml-auto flex flex-col items-end justify-between">
                   <p className="text-right text-sm font-bold text-gray-900">
-                    ₹{item.size?.price}
+                    ₹{item.size?.price || item.price}
                   </p>
                 </div>
               </li>
