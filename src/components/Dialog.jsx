@@ -318,7 +318,7 @@ export function DialogBox(props) {
                 <Input
                   type="number"
                   name="price"
-                  label={`Price`}
+                  label={`Price (in ₹)`}
                   value={formData.price}
                   onChange={handleChange}
                 />
@@ -346,7 +346,7 @@ export function DialogBox(props) {
                 <Input
                   type="number"
                   name="price"
-                  label={`Price for ${item.label}`}
+                  label={`Price for ${item.label} (in ₹)`}
                   value={item.price}
                   onChange={(e) => handlePriceChange(index, e.target.value)}
                 />
