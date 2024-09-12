@@ -24,6 +24,7 @@ export function DialogBox(props) {
     name: "",
     description: "",
     size: null,
+    price: null,
     category: null,
     isVeg: true,
     inStock: true,
@@ -32,6 +33,8 @@ export function DialogBox(props) {
   const [errors, setErrors] = React.useState({});
   const [categoryData, setCategoryData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const pizzaCategoryId = "6679a88144eccbf26f61b104";
 
   const getCategoryData = React.useCallback(async () => {
     try {
@@ -85,8 +88,13 @@ export function DialogBox(props) {
     if (!formData.description)
       newErrors.description = "Description is required";
     if (!formData.category) newErrors.category = "Category is required";
-    if (!formData.size || formData.size.length === 0)
+    if (
+      formData.category?._id == pizzaCategoryId &&
+      (!formData.size || formData.size.length === 0)
+    )
       newErrors.size = "Size is required";
+    if (formData.category?._id != pizzaCategoryId && !formData.price)
+      newErrors.price = "Price is required";
     return newErrors;
   };
 
@@ -139,6 +147,13 @@ export function DialogBox(props) {
     }
   }
 
+  function resetField(key) {
+    setFormData((prevData) => ({
+      ...prevData,
+      [key]: null,
+    }));
+  }
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
@@ -147,6 +162,13 @@ export function DialogBox(props) {
         [name]: files[0],
       }));
     } else if (name === "category") {
+      console.log("value ======= ", type);
+      if (value !== pizzaCategoryId) {
+        resetField("size");
+      } else {
+        resetField("price");
+      }
+
       const selectedCategory = categoryData.find(
         (category) => category._id === value
       );
@@ -182,6 +204,7 @@ export function DialogBox(props) {
         name: props.data?.name || "",
         description: props.data?.description || "",
         size: props.data?.size || null,
+        price: props.data?.price || null,
         category: props.data?.category || null,
         isVeg: props.data?.isVeg ?? true,
         inStock: props.data?.inStock ?? true,
@@ -193,6 +216,7 @@ export function DialogBox(props) {
         name: "",
         description: "",
         size: null,
+        price: null,
         category: null,
         isVeg: true,
         inStock: true,
@@ -272,22 +296,34 @@ export function DialogBox(props) {
               />
             </div>
 
-            <div className="relative">
-              <Select
-                isMulti
-                closeMenuOnSelect={false}
-                options={sizeOptions}
-                value={sizeOptions.filter((option) =>
-                  formData.size?.some(
-                    (selected) => selected.value === option.value
-                  )
-                )}
-                onChange={handleSizeChange}
-                className="react-select-container"
-                placeholder="Select Size"
-                classNamePrefix="react-select"
-              />
-            </div>
+            {formData.category?._id == pizzaCategoryId ? (
+              <div className="relative">
+                <Select
+                  isMulti
+                  closeMenuOnSelect={false}
+                  options={sizeOptions}
+                  value={sizeOptions.filter((option) =>
+                    formData.size?.some(
+                      (selected) => selected.value === option.value
+                    )
+                  )}
+                  onChange={handleSizeChange}
+                  className="react-select-container"
+                  placeholder="Select Size"
+                  classNamePrefix="react-select"
+                />
+              </div>
+            ) : (
+              <div className="relative">
+                <Input
+                  type="number"
+                  name="price"
+                  label={`Price`}
+                  value={formData.price}
+                  onChange={handleChange}
+                />
+              </div>
+            )}
 
             {[
               { name: "isVeg", label: "Is Veg" },
@@ -319,14 +355,6 @@ export function DialogBox(props) {
           </div>
         </DialogBody>
         <DialogFooter>
-          {/* <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-          >
-            Cancel
-          </Button> */}
           <Button
             variant="gradient"
             color="green"

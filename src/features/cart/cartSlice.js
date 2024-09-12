@@ -53,7 +53,7 @@ export const getTotalAmount = createSelector(
   (state) => state.cart.value,
   (val) =>
     val.reduce(
-      (accumulator, { size, quantity }) => accumulator + size.price * quantity,
+      (accumulator, { size, quantity, price }) => accumulator + (size?.price || price) * quantity,
       0
     )
 );
