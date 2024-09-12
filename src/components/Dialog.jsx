@@ -24,6 +24,7 @@ export function DialogBox(props) {
     name: "",
     description: "",
     size: null,
+    price: null,
     category: null,
     isVeg: true,
     inStock: true,
@@ -87,8 +88,13 @@ export function DialogBox(props) {
     if (!formData.description)
       newErrors.description = "Description is required";
     if (!formData.category) newErrors.category = "Category is required";
-    if (formData.category?._id == pizzaCategoryId && (!formData.size || formData.size.length === 0))
+    if (
+      formData.category?._id == pizzaCategoryId &&
+      (!formData.size || formData.size.length === 0)
+    )
       newErrors.size = "Size is required";
+    if (formData.category?._id != pizzaCategoryId && !formData.price)
+      newErrors.price = "Price is required";
     return newErrors;
   };
 
@@ -141,10 +147,10 @@ export function DialogBox(props) {
     }
   }
 
-  function resetSize() {
+  function resetField(key) {
     setFormData((prevData) => ({
       ...prevData,
-      size: null,
+      [key]: null,
     }));
   }
 
@@ -158,7 +164,9 @@ export function DialogBox(props) {
     } else if (name === "category") {
       console.log("value ======= ", type);
       if (value !== pizzaCategoryId) {
-        resetSize();
+        resetField("size");
+      } else {
+        resetField("price");
       }
 
       const selectedCategory = categoryData.find(
@@ -196,6 +204,7 @@ export function DialogBox(props) {
         name: props.data?.name || "",
         description: props.data?.description || "",
         size: props.data?.size || null,
+        price: props.data?.price || null,
         category: props.data?.category || null,
         isVeg: props.data?.isVeg ?? true,
         inStock: props.data?.inStock ?? true,
@@ -207,6 +216,7 @@ export function DialogBox(props) {
         name: "",
         description: "",
         size: null,
+        price: null,
         category: null,
         isVeg: true,
         inStock: true,
@@ -287,7 +297,7 @@ export function DialogBox(props) {
               />
             </div>
 
-            {formData.category?._id == pizzaCategoryId && (
+            {formData.category?._id == pizzaCategoryId ? (
               <div className="relative">
                 <Select
                   isMulti
@@ -302,6 +312,16 @@ export function DialogBox(props) {
                   className="react-select-container"
                   placeholder="Select Size"
                   classNamePrefix="react-select"
+                />
+              </div>
+            ) : (
+              <div className="relative">
+                <Input
+                  type="number"
+                  name="price"
+                  label={`Price`}
+                  value={formData.price}
+                  onChange={handleChange}
                 />
               </div>
             )}
