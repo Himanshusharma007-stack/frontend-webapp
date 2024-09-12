@@ -101,9 +101,12 @@ export default function RestaurantOrders(props) {
   async function getOrdersData() {
     try {
       setIsLoading(true);
-      let { data } = await getOrdersDataRestaurantId(props.restaurantData?._id);
-      console.log("orders data ----------------> ", data);
-      setOrderData(data);
+      if (props.restaurantData?._id) {
+        let { data } = await getOrdersDataRestaurantId(
+          props.restaurantData?._id
+        );
+        setOrderData(data);
+      }
     } catch (error) {
       console.error("Error while fetching orders data ----> ", error);
       throw new Error(error);
@@ -131,7 +134,7 @@ export default function RestaurantOrders(props) {
 
   useEffect(() => {
     getOrdersData();
-  }, []);
+  }, [props.restaurantData?._id]);
 
   async function refreshBtnClicked() {
     try {
