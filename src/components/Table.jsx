@@ -4,6 +4,7 @@ import { RotateCw } from "lucide-react";
 const TABLE_HEAD = [
   "Name",
   "Image",
+  'Category',
   "Description",
   "In Stock",
   "Action",
@@ -96,6 +97,15 @@ export function Table(props) {
                           alt="Avatar"
                           loading='eager'
                         />)}
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {category?.name}
+                        </Typography>
                       </td>
                       <td className={classes}>
                         <Typography
