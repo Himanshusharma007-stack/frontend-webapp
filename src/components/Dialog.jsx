@@ -33,6 +33,8 @@ export function DialogBox(props) {
   const [categoryData, setCategoryData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const pizzaCategoryId = "6679a88144eccbf26f61b104";
+
   const getCategoryData = React.useCallback(async () => {
     try {
       if (!categoryData.length) {
@@ -85,7 +87,7 @@ export function DialogBox(props) {
     if (!formData.description)
       newErrors.description = "Description is required";
     if (!formData.category) newErrors.category = "Category is required";
-    if (!formData.size || formData.size.length === 0)
+    if (formData.category?._id == pizzaCategoryId && (!formData.size || formData.size.length === 0))
       newErrors.size = "Size is required";
     return newErrors;
   };
@@ -139,6 +141,13 @@ export function DialogBox(props) {
     }
   }
 
+  function resetSize() {
+    setFormData((prevData) => ({
+      ...prevData,
+      size: null,
+    }));
+  }
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
@@ -147,6 +156,11 @@ export function DialogBox(props) {
         [name]: files[0],
       }));
     } else if (name === "category") {
+      console.log("value ======= ", type);
+      if (value !== pizzaCategoryId) {
+        resetSize();
+      }
+
       const selectedCategory = categoryData.find(
         (category) => category._id === value
       );
@@ -228,6 +242,7 @@ export function DialogBox(props) {
           </Button>
         </DialogHeader>
         <DialogBody>
+          <div>{JSON.stringify(formData)}</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {["name", "description"].map((field) => (
               <div key={field}>
@@ -272,22 +287,24 @@ export function DialogBox(props) {
               />
             </div>
 
-            <div className="relative">
-              <Select
-                isMulti
-                closeMenuOnSelect={false}
-                options={sizeOptions}
-                value={sizeOptions.filter((option) =>
-                  formData.size?.some(
-                    (selected) => selected.value === option.value
-                  )
-                )}
-                onChange={handleSizeChange}
-                className="react-select-container"
-                placeholder="Select Size"
-                classNamePrefix="react-select"
-              />
-            </div>
+            {formData.category?._id == pizzaCategoryId && (
+              <div className="relative">
+                <Select
+                  isMulti
+                  closeMenuOnSelect={false}
+                  options={sizeOptions}
+                  value={sizeOptions.filter((option) =>
+                    formData.size?.some(
+                      (selected) => selected.value === option.value
+                    )
+                  )}
+                  onChange={handleSizeChange}
+                  className="react-select-container"
+                  placeholder="Select Size"
+                  classNamePrefix="react-select"
+                />
+              </div>
+            )}
 
             {[
               { name: "isVeg", label: "Is Veg" },
@@ -319,14 +336,6 @@ export function DialogBox(props) {
           </div>
         </DialogBody>
         <DialogFooter>
-          {/* <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1"
-          >
-            Cancel
-          </Button> */}
           <Button
             variant="gradient"
             color="green"
