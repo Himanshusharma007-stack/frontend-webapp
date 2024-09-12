@@ -50,7 +50,8 @@ export function Orders() {
                       order?.prepareUpto,
                       "MMMM Do YYYY, h:mm:ss a"
                     )}` : 'Your order is ready please take away from restaurant.'}
-                    notificationClass="mt-6"
+                    notificationClass={`mt-6 ${ statusChecker.checkStatus(order) == 'Delivered' ? 'bg-delivered' : statusChecker.checkStatus(order) == 'Ready' ? 'bg-ready' : statusChecker.checkStatus(order) == 'Preparing' ? 'bg-preparing' : 'bg-gray-700'  }`}
+                    textClass='text-black'
                     hideCloseBtn={true}
                   />
                 ) : (

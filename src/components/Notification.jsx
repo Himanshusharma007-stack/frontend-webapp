@@ -9,7 +9,7 @@ export default function Notification(props) {
         } border px-4 py-3 mt-2 rounded relative ${props.notificationClass}`}
         role="alert"
       >
-        <span className="text-wrap">{props.msg}</span>
+        <span className={`text-wrap ${props.textClass}`}>{props.msg}</span>
         {!props?.hideCloseBtn ? (
           <span className="absolute top-0 right-0 px-2 py-1">
             <button
