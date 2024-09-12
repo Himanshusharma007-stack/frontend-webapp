@@ -53,7 +53,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!cartArr.length) {
-      navigate("/");
+      navigate("/myorders");
     }
   }, [cartArr, navigate]);
 
