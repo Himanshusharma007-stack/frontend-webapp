@@ -75,8 +75,10 @@ export default function RestaurantOrders(props) {
   async function updateStatus() {
     try {
       setEditDialogLoading(true);
-      let res = await updateOrderStatus({ orderId: selectedItem._id, status });
-      console.log("res -------------------> ", res);
+      let res = await updateOrderStatus({
+        orderId: selectedItem._id,
+        status: { [status]: true },
+      });
       if (res.success) {
         setEditDialog(false);
         refreshBtnClicked();
@@ -99,9 +101,7 @@ export default function RestaurantOrders(props) {
   async function getOrdersData() {
     try {
       setIsLoading(true);
-      let { data } = await getOrdersDataRestaurantId(
-        props.restaurantData?._id
-      );
+      let { data } = await getOrdersDataRestaurantId(props.restaurantData?._id);
       console.log("orders data ----------------> ", data);
       setOrderData(data);
     } catch (error) {
