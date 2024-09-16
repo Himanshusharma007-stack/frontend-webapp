@@ -2,6 +2,9 @@ import Card from "../components/Card";
 import React, { useState, useEffect } from "react";
 import { getRestaurants } from "../services/Restaurants";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCartItemsFromLocalStorage } from "../features/cart/cartSlice";
+import localStorageFunctions from "../utils/localStorageFunctions";
 
 export default function Homepage() {
   const navigate = useNavigate();
@@ -15,7 +18,9 @@ export default function Homepage() {
       try {
         setLoading(true);
         const response = await getRestaurants();
-        let activeRestaurants = response?.data?.filter(resto => resto.isActive)
+        let activeRestaurants = response?.data?.filter(
+          (resto) => resto.isActive
+        );
         setRestaurantList(activeRestaurants);
         setFilteredRestaurants(activeRestaurants);
       } catch (error) {
@@ -26,7 +31,15 @@ export default function Homepage() {
     };
 
     fetchData();
+    // setCartItem();
   }, []);
+
+  function setCartItem() {
+    let items = localStorageFunctions.getDatafromLocalstorage("cartItems");
+    if (items) {
+      setCartItemsFromLocalStorage(items);
+    }
+  }
 
   function handleSearchChange(e) {
     const query = e.target.value.toLowerCase();

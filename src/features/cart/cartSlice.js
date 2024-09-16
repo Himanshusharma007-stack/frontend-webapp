@@ -1,4 +1,7 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import localStorageFunctions from "../../utils/localStorageFunctions";
 
 const initialState = {
   value: [],
@@ -9,12 +12,14 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     add: (state, action) => {
-      let item = { ...action.payload, quantity: 1 };
+      const item = { ...action.payload, quantity: 1 };
       state.value.push(item);
+      localStorageFunctions.saveInLocalstorage("cartItems", state.value);
     },
 
     reset: (state) => {
       state.value = [];
+      localStorageFunctions.saveInLocalstorage("cartItems", state.value);
     },
 
     increament: (state, action) => {
@@ -23,6 +28,7 @@ export const cartSlice = createSlice({
           elem.quantity += 1;
         }
       });
+      localStorageFunctions.saveInLocalstorage("cartItems", state.value);
     },
 
     decreament: (state, action) => {
@@ -32,11 +38,11 @@ export const cartSlice = createSlice({
             elem.quantity -= 1;
           }
           if (elem.quantity === 0) {
-            // This ensures that items with 0 quantity are removed
-            state.value.splice(index, 1);
+            state.value.splice(index, 1); // Remove the item if quantity is 0
           }
         }
       });
+      localStorageFunctions.saveInLocalstorage("cartItems", state.value);
     },
 
     deletefromCart: (state, action) => {
@@ -45,6 +51,11 @@ export const cartSlice = createSlice({
           state.value.splice(index, 1);
         }
       });
+      localStorageFunctions.saveInLocalstorage("cartItems", state.value);
+    },
+
+    setCartItemsFromLocalStorage: (state, action) => {
+      state.value = action.payload;
     },
   },
 });
@@ -53,12 +64,38 @@ export const getTotalAmount = createSelector(
   (state) => state.cart.value,
   (val) =>
     val.reduce(
-      (accumulator, { size, quantity, price }) => accumulator + (size?.price || price) * quantity,
+      (accumulator, { size, quantity, price }) =>
+        accumulator + (size?.price || price) * quantity,
       0
     )
 );
 
 // Action creators are generated for each case reducer function
-export const { add, reset, increament, decreament, deletefromCart } = cartSlice.actions;
+export const {
+  add,
+  reset,
+  increament,
+  decreament,
+  deletefromCart,
+  setCartItemsFromLocalStorage,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;
+
+// Hook to fetch cart items from localStorage
+export function useSetCartItemsFromLocalStorage() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const items = localStorageFunctions.getDatafromLocalstorage("cartItems");
+    if (items) {
+      try {
+        if (Array.isArray(items)) {
+          dispatch(setCartItemsFromLocalStorage(items));
+        }
+      } catch (error) {
+        console.error("Error parsing localStorage data", error);
+      }
+    }
+  }, [dispatch]);
+}
