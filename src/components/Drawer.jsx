@@ -32,6 +32,7 @@ export default function DrawerComp() {
           };
           let res = await createUser(obj);
           if (res.user) {
+            localStorageFunctions.saveInLocalstorage("userData", res.user);
             localStorageFunctions.saveInLocalstorage("userId", res.user._id);
           }
         } catch (error) {
