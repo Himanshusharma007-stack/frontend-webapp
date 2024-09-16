@@ -16,6 +16,7 @@ import PrivacyPolicy from "../components/PrivacyPolicy";
 import RefundsandCancellation from "../components/Refunds&Cancellations";
 import ShippingPolicy from "../components/ShippingPolicy";
 import { Button } from "@material-tailwind/react";
+import localStorageFunctions from "../utils/localStorageFunctions.js";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -59,6 +60,10 @@ export default function Checkout() {
 
   useEffect(() => {
     if (user?.name !== user?.email) {
+      let userData = localStorageFunctions.getDatafromLocalstorage('userData')
+      if (userData.mobile) {
+        setFormData((prevFormData) => ({ ...prevFormData, mobile: userData.mobile }));
+      }
       setFormData((prevFormData) => ({ ...prevFormData, name: user.name }));
     }
     console.log("user ---------- ", user);

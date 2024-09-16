@@ -14,6 +14,7 @@ const LogoutButton = () => {
       },
     });
     localStorageFunctions.removeDatafromLocalstorage("userId");
+    localStorageFunctions.removeDatafromLocalstorage("userData");
   }
 
   return (
