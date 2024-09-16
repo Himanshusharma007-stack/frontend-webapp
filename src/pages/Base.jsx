@@ -1,9 +1,12 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Outlet } from "react-router-dom";
-// import LandingPage from "./pages/Landing.jsx";
+import { useSetCartItemsFromLocalStorage } from "../features/cart/cartSlice";
 
 export default function Base() {
+  // Fetch cart items from localStorage on page load or refresh
+  useSetCartItemsFromLocalStorage();
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />

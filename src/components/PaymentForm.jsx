@@ -50,7 +50,7 @@ const PaymentForm = (props) => {
         amount: orderData.amount,
         currency: orderData.currency,
         name: "DriveFood",
-        description: "Test Transaction",
+        description: "Food",
         order_id: orderData.id,
         handler: handlePaymentSuccess,
         // prefill: {
