@@ -105,7 +105,8 @@ export default function RestaurantOrders(props) {
         let { data } = await getOrdersDataRestaurantId(
           props.restaurantData?._id
         );
-        setOrderData(data);
+        let sortedData = data.sort((a, b) => b?._id?.localeCompare(a?._id))
+        setOrderData(sortedData);
       }
     } catch (error) {
       console.error("Error while fetching orders data ----> ", error);
