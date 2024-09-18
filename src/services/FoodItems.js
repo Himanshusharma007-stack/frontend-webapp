@@ -49,4 +49,16 @@ export const getCategories = async () => {
   }
 }
 
+// Function to create foodItem
+export const getSignedUrl = async (url) => {
+  try {
+    const response = await apiClient.post("/foodItem/createsignedurl", {url});
+    
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching restaurants:", error);
+    throw error.response.data;
+  }
+};
+
 export default apiClient;
