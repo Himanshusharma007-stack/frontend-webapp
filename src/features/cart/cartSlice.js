@@ -2,6 +2,7 @@ import { createSlice, createSelector } from "@reduxjs/toolkit";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import localStorageFunctions from "../../utils/localStorageFunctions";
+import { getSignedUrl } from "../../services/FoodItems";
 
 const initialState = {
   value: [],
@@ -87,15 +88,43 @@ export function useSetCartItemsFromLocalStorage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const items = localStorageFunctions.getDatafromLocalstorage("cartItems");
-    if (items) {
-      try {
-        if (Array.isArray(items)) {
-          dispatch(setCartItemsFromLocalStorage(items));
+    const fetchSignedUrls = async () => {
+      const items = localStorageFunctions.getDatafromLocalstorage("cartItems");
+      if (items) {
+        try {
+          if (Array.isArray(items)) {
+            const updatedItems = await Promise.all(
+              items.map(async (item) => {
+                if (item.imageUrl) {
+                  try {
+                    const res = await getSignedUrl(item.imageUrl);
+                    if (res.success) {
+                      item.imageUrl = res.data.signedUrl;
+                    }
+                  } catch (error) {
+                    console.error(`Failed to get signed URL for item: ${item._id}`, error);
+                  }
+                }
+                return item;
+              })
+            );
+  
+            console.log('Updated items with signed URLs === ', updatedItems);
+            // Optionally update local storage again with the items containing signed URLs
+            localStorageFunctions.saveInLocalstorage("cartItems", updatedItems);
+  
+            dispatch(setCartItemsFromLocalStorage(updatedItems));
+
+          }
+        } catch (error) {
+          console.error("Error processing localStorage data", error);
         }
-      } catch (error) {
-        console.error("Error parsing localStorage data", error);
       }
-    }
+    };
+  
+    fetchSignedUrls(); // Call the async function inside useEffect
   }, [dispatch]);
 }
+
+
+
