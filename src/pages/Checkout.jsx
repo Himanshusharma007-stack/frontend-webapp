@@ -30,19 +30,19 @@ export default function Checkout() {
     mobile: "",
   });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      const setUserDetails = async () => {
-        try {
-          console.log("user ------------------------- ", user);
-        } catch (error) {
-          console.error("Error calling API:", error);
-        }
-      };
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     const setUserDetails = async () => {
+  //       try {
+  //         console.log("user ------------------------- ", user);
+  //       } catch (error) {
+  //         console.error("Error calling API:", error);
+  //       }
+  //     };
 
-      setUserDetails();
-    }
-  }, [isAuthenticated, user]);
+  //     setUserDetails();
+  //   }
+  // }, [isAuthenticated, user]);
 
   const removeFromCartClicked = (item) => {
     dispatch(decreament(item));
@@ -54,15 +54,18 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!cartArr.length) {
-      navigate("/myorders");
+      navigate("/myorders", { state: { previousPath: location.pathname } });
     }
   }, [cartArr, navigate]);
 
   useEffect(() => {
     if (user?.name !== user?.email) {
-      let userData = localStorageFunctions.getDatafromLocalstorage('userData')
+      let userData = localStorageFunctions.getDatafromLocalstorage("userData");
       if (userData.mobile) {
-        setFormData((prevFormData) => ({ ...prevFormData, mobile: userData.mobile }));
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          mobile: userData.mobile,
+        }));
       }
       setFormData((prevFormData) => ({ ...prevFormData, name: user.name }));
     }
