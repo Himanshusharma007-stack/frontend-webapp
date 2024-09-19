@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getUserById } from "../services/User";
 import OrderCard from "../components/OrderCard";
 import dateFormatter from "../utils/formatDate.js";
 import { NoOrderFound } from "../components/NoOrderFound.jsx"; // Ensure correct import
@@ -8,27 +7,48 @@ import moment from "moment";
 import { getOrdersDataByUserId } from "../services/Order";
 import statusChecker from "../utils/checkStatus.js";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
+import RefreshBtn from "../components/RefreshBtn.jsx";
+import { useLocation } from "react-router-dom";
 
 export function Orders() {
+  const location = useLocation();
   const [ordersData, setOrdersData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setIsLoading(true);
-        let userId = localStorageFunctions.getDatafromLocalstorage("userId");
-        let ordersData = await getOrdersDataByUserId(userId);
-        setOrdersData(ordersData?.data || []);
-      } catch (error) {
-        console.error("Error --> ", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // Access the state from route
+  const rawData = location.state;
 
-    fetchUserData();
+  const fetchUserData = async () => {
+    try {
+      setIsLoading(true);
+      let userId = localStorageFunctions.getDatafromLocalstorage("userId");
+      let ordersData = await getOrdersDataByUserId(userId);
+      setOrdersData(ordersData?.data || []);
+    } catch (error) {
+      console.error("Error --> ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (rawData.previousPath != "/checkout") {
+      handleRefresh();
+    } else {
+      setIsLoading(true);
+      setTimeout(() => {
+        handleRefresh();
+      }, 1000);
+    }
   }, []);
+
+  async function handleRefresh() {
+    try {
+      await fetchUserData();
+    } catch (error) {
+      console.error("Error --> ", error);
+    }
+  }
 
   return (
     <div>
@@ -36,22 +56,37 @@ export function Orders() {
         <NoOrderFound />
       ) : (
         <div className="mx-auto my-4 max-w-6xl px-2 md:my-6 md:px-0">
-          <h2 className="text-3xl font-bold">Order Details</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-bold">Order Details</h2>
+            <RefreshBtn isLoading={isLoading} refresh={handleRefresh} />
+          </div>
           <div className="mt-3 text-sm mb-3">
             Check the status of recent and old orders
           </div>
           {ordersData
             .sort((a, b) => b?._id?.localeCompare(a?._id))
             ?.map((order) => (
-              <>
+              <React.Fragment key={order._id}>
                 {order?.prepareUpto && !order?.isDelivered ? (
                   <Notification
-                    msg={moment(new Date()).isBefore(moment(order?.prepareUpto)) ? `Your order will be prepared upto ${dateFormatter.formatDate(
-                      order?.prepareUpto,
-                      "MMMM Do YYYY, h:mm:ss a"
-                    )}` : 'Your order is ready please take away from restaurant.'}
-                    notificationClass={`mt-6 ${ statusChecker.checkStatus(order) == 'Delivered' ? 'bg-delivered' : statusChecker.checkStatus(order) == 'Ready' ? 'bg-ready' : statusChecker.checkStatus(order) == 'Preparing' ? 'bg-preparing' : 'bg-gray-700'  }`}
-                    textClass='text-black'
+                    msg={
+                      moment(new Date()).isBefore(moment(order?.prepareUpto))
+                        ? `Your order will be prepared upto ${dateFormatter.formatDate(
+                            order?.prepareUpto,
+                            "MMMM Do YYYY, h:mm:ss a"
+                          )}`
+                        : "Your order is ready please take away from restaurant."
+                    }
+                    notificationClass={`mt-6 ${
+                      statusChecker.checkStatus(order) == "Delivered"
+                        ? "bg-delivered"
+                        : statusChecker.checkStatus(order) == "Ready"
+                        ? "bg-ready"
+                        : statusChecker.checkStatus(order) == "Preparing"
+                        ? "bg-preparing"
+                        : "bg-gray-700"
+                    }`}
+                    textClass="text-black"
                     hideCloseBtn={true}
                   />
                 ) : (
@@ -69,9 +104,8 @@ export function Orders() {
                       "MMMM Do YYYY, h:mm:ss a"
                     ),
                   }}
-
                 />
-              </>
+              </React.Fragment>
             ))}
         </div>
       )}

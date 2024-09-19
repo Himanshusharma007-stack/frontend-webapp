@@ -12,7 +12,6 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
-// updateOrderStatus
 import { updateOrderStatus } from "../services/Order";
 
 export default function RestaurantOrders(props) {
@@ -105,7 +104,7 @@ export default function RestaurantOrders(props) {
         let { data } = await getOrdersDataRestaurantId(
           props.restaurantData?._id
         );
-        let sortedData = data.sort((a, b) => b?._id?.localeCompare(a?._id))
+        let sortedData = data.sort((a, b) => b?._id?.localeCompare(a?._id));
         setOrderData(sortedData);
       }
     } catch (error) {
