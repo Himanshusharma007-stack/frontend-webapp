@@ -32,7 +32,7 @@ export function Orders() {
   };
 
   useEffect(() => {
-    if (rawData.previousPath != "/checkout") {
+    if (rawData?.previousPath != "/checkout") {
       handleRefresh();
     } else {
       setIsLoading(true);
