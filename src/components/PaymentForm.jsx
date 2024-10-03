@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import axios from "axios";
 import { createOrder } from "../services/Order";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,6 +12,16 @@ const PaymentForm = (props) => {
   const dispatch = useDispatch();
   const { user, loginWithRedirect } = useAuth0();
 
+  // Computed value for total order amount
+  const onlineAmount = useMemo(() => {
+    return Math.floor(Number(props?.amount || 0) / 2)
+  }, [props.amount]);
+
+  // Computed value for total order amount
+  const codAmount = useMemo(() => {
+    return Number(props.amount) - onlineAmount
+  }, [props.amount, onlineAmount]);
+
   const handlePaymentSuccess = async (response) => {
     try { 
       const verifyResponse = await axios.post(
@@ -19,15 +29,19 @@ const PaymentForm = (props) => {
         response
       );
       if (verifyResponse.status == 200) {
-        let orderCreatedRes = createOrder({
+        let obj = {
           orderId: response.razorpay_order_id,
           paymentId: response.razorpay_payment_id,
           userId: localStorageFunctions.getDatafromLocalstorage("userId"),
           amount: props.amount,
+          paidAmount: onlineAmount,
+          codAmount: codAmount,
           name: props.name?.trim(),
           mobile: props.mobile?.trim(),
           orderData: cartArr,
-        });
+        }
+        let orderCreatedRes = createOrder(obj);
+        console.log("obj ------------ ", obj);
         console.log("orderCreatedRes ------------ ", orderCreatedRes);
         dispatch(reset());
       }
@@ -41,13 +55,13 @@ const PaymentForm = (props) => {
     e.preventDefault();
     try {
       const orderResponse = await axios.post(`${backendUrl}/order/payment`, {
-        amount: props.amount,
+        amount: onlineAmount,
       });
       const orderData = orderResponse.data;
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_key_id,
-        amount: orderData.amount,
+        amount: onlineAmount,
         currency: orderData.currency,
         name: "DriveFood",
         description: "Food",
