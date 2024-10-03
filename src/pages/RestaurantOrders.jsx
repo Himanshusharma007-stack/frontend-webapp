@@ -156,6 +156,11 @@ export default function RestaurantOrders(props) {
     }
   }
 
+  function handleDialog() {
+    setEditDialog(false)
+    setStatus(null)
+  }
+
   return (
     <>
       <DynamicTable
@@ -180,7 +185,7 @@ export default function RestaurantOrders(props) {
             color="blue-gray"
             size="sm"
             variant="text"
-            onClick={() => setEditDialog(false)}
+            onClick={handleDialog}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -233,6 +238,8 @@ export default function RestaurantOrders(props) {
                 </Option>
               ))}
             </Select>
+
+
           </div>
         </DialogBody>
 

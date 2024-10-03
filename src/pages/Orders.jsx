@@ -99,6 +99,8 @@ export function Orders() {
                   rawData={{
                     orderId: order._id,
                     amount: order.amount,
+                    paidAmount: order.paidAmount,
+                    codAmount: order.codAmount,
                     createdAt: dateFormatter.formatDate(
                       order.createdAt,
                       "MMMM Do YYYY, h:mm:ss a"
