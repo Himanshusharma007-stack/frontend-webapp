@@ -86,8 +86,6 @@ const PaymentForm = (props) => {
 
   return (
     <div>
-      <div>onlineAmount == {JSON.stringify(onlineAmount)}</div>
-      <div>codAmount == {JSON.stringify(codAmount)}</div>
       <div className="mt-10 flex justify-end border-gray-200 pt-2">
         {!user?.picture ? (
           <button

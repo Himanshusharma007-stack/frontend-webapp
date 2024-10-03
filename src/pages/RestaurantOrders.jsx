@@ -13,6 +13,7 @@ import {
   Option,
   Typography,
   IconButton,
+  Checkbox,
 } from "@material-tailwind/react";
 import { updateOrderStatus } from "../services/Order";
 
@@ -23,6 +24,7 @@ export default function RestaurantOrders(props) {
   const [selectedItem, setSelectedItem] = useState({});
   const [status, setStatus] = useState(null);
   const [editDialogLoading, setEditDialogLoading] = useState(false);
+  const [isAmountTaken, setIsAmountTaken] = useState(false);
   let header = [
     {
       title: "Username / Usermobile",
@@ -131,6 +133,8 @@ export default function RestaurantOrders(props) {
     return orderData.map((data) => {
       return {
         _id: data?._id,
+        codAmount: data?.codAmount,
+        paidAmount: data?.paidAmount,
         amount: data?.amount,
         items: data?.items?.map((item) => item?.name)?.join(", "),
         userName: data?.user?.name,
@@ -157,8 +161,9 @@ export default function RestaurantOrders(props) {
   }
 
   function handleDialog() {
-    setEditDialog(false)
-    setStatus(null)
+    setEditDialog(false);
+    setStatus(null);
+    setIsAmountTaken(false);
   }
 
   return (
@@ -211,35 +216,53 @@ export default function RestaurantOrders(props) {
             <strong>{selectedItem?.items}</strong> with an amount of{" "}
             <strong> ₹{selectedItem?.amount} </strong> ?
           </div>
-          <div className="mt-3">
-            <Select
-              label="Status"
-              value={status}
-              onChange={(val) => setStatus(val)}
-            >
-              {[
-                {
-                  name: "Ready",
-                  value: "isReady",
-                  isDisable: selectedItem.status == "Ready",
-                },
-                {
-                  name: "Delivered",
-                  value: "isDelivered",
-                  isDisable: selectedItem.status == "Delivered",
-                },
-              ].map((status) => (
-                <Option
-                  value={status.value}
-                  key={status.value}
-                  disabled={status.isDisable}
-                >
-                  {status.name}
-                </Option>
-              ))}
-            </Select>
+          <div className="mt-3 flex items-center gap-6">
+            <div className="w-max">
+              <Select
+                label="Status"
+                value={status}
+                onChange={(val) => setStatus(val)}
+              >
+                {[
+                  {
+                    name: "Ready",
+                    value: "isReady",
+                    isDisable: selectedItem.status == "Ready",
+                  },
+                  {
+                    name: "Delivered",
+                    value: "isDelivered",
+                    isDisable: selectedItem.status == "Delivered",
+                  },
+                ].map((status) => (
+                  <Option
+                    value={status.value}
+                    key={status.value}
+                    disabled={status.isDisable}
+                  >
+                    {status.name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
 
-
+            {status == "isDelivered" && (
+              <div className="flex items-center">
+                <Checkbox
+                  label={
+                    <>
+                      Is{" "}
+                      <span className="font-bold">
+                        ₹{selectedItem?.codAmount || 0}
+                      </span>{" "}
+                      COD Amount taken by the restaurant?
+                    </>
+                  }
+                  value={isAmountTaken}
+                  onChange={() => setIsAmountTaken(!isAmountTaken)}
+                />
+              </div>
+            )}
           </div>
         </DialogBody>
 
@@ -247,7 +270,11 @@ export default function RestaurantOrders(props) {
           <Button
             variant="gradient"
             color="blue"
-            disabled={!status || editDialogLoading}
+            disabled={
+              !status ||
+              editDialogLoading ||
+              (status == "isDelivered" && !isAmountTaken)
+            }
             loading={editDialogLoading}
             onClick={() => updateStatus()}
           >
