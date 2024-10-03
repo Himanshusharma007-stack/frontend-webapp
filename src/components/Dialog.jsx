@@ -7,6 +7,8 @@ import {
   DialogFooter,
   Input,
   Switch,
+  Typography,
+  IconButton,
 } from "@material-tailwind/react";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
 import {
@@ -16,7 +18,6 @@ import {
 } from "../services/FoodItems.js";
 import { Pencil } from "lucide-react";
 import Select from "react-select";
-import { X } from "lucide-react";
 
 export function DialogBox(props) {
   const [open, setOpen] = React.useState(false);
@@ -240,16 +241,37 @@ export function DialogBox(props) {
       )}
 
       <Dialog open={open}>
-        <DialogHeader className="flex justify-between items-center">
-          {props?.data ? <span>Edit Item</span> : <span>Add Item</span>}
-          <Button
+        <DialogHeader className="justify-between">
+          <div>
+            <Typography variant="h5" color="blue-gray">
+              {props?.data ? <span>Edit Item</span> : <span>Add Item</span>}
+            </Typography>
+            {/* <Typography color="gray" variant="paragraph">
+              {selectedItem._id}
+            </Typography> */}
+          </div>
+
+          <IconButton
+            color="blue-gray"
+            size="sm"
             variant="text"
-            color="red"
             onClick={handleOpen}
-            className="rounded-full"
           >
-            <X className="h-6 w-6" aria-hidden="true" />
-          </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </IconButton>
         </DialogHeader>
         <DialogBody>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

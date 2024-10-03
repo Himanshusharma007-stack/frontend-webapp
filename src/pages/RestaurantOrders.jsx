@@ -11,6 +11,8 @@ import {
   DialogFooter,
   Select,
   Option,
+  Typography,
+  IconButton,
 } from "@material-tailwind/react";
 import { updateOrderStatus } from "../services/Order";
 
@@ -27,12 +29,21 @@ export default function RestaurantOrders(props) {
       value: "userName",
       render: (item) => (
         <div className="text-sm font-normal">
-          <div>{item.userName}</div>
-          <div>{item.userMobile}</div>
+          <div className="font-semibold">{item.userName}</div>
+          <div className="text-xs">{item.userMobile}</div>
         </div>
       ),
     },
-    { title: "Items", value: "items" },
+    {
+      title: "Orderid / Items",
+      value: "items",
+      render: (item) => (
+        <div className="text-sm font-normal">
+          <div className="font-semibold">{item._id}</div>
+          <div className="text-xs">{item.items}</div>
+        </div>
+      ),
+    },
     { title: "Amount(in ₹)", value: "amount" },
     {
       title: "Status",
@@ -155,8 +166,37 @@ export default function RestaurantOrders(props) {
       />
 
       <Dialog open={editDialog}>
-        <DialogHeader>
-          {selectedItem.userName}({selectedItem.userMobile})
+        <DialogHeader className="justify-between">
+          <div>
+            <Typography variant="h5" color="blue-gray">
+              {selectedItem.userName}({selectedItem.userMobile})
+            </Typography>
+            <Typography color="gray" variant="paragraph">
+              {selectedItem._id}
+            </Typography>
+          </div>
+
+          <IconButton
+            color="blue-gray"
+            size="sm"
+            variant="text"
+            onClick={() => setEditDialog(false)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </IconButton>
         </DialogHeader>
 
         <DialogBody>
@@ -173,10 +213,22 @@ export default function RestaurantOrders(props) {
               onChange={(val) => setStatus(val)}
             >
               {[
-                { name: "Ready", value: "isReady", isDisable: selectedItem.status == 'Ready' },
-                { name: "Delivered", value: "isDelivered", isDisable: selectedItem.status == 'Delivered' },
+                {
+                  name: "Ready",
+                  value: "isReady",
+                  isDisable: selectedItem.status == "Ready",
+                },
+                {
+                  name: "Delivered",
+                  value: "isDelivered",
+                  isDisable: selectedItem.status == "Delivered",
+                },
               ].map((status) => (
-                <Option value={status.value} key={status.value} disabled={status.isDisable}>
+                <Option
+                  value={status.value}
+                  key={status.value}
+                  disabled={status.isDisable}
+                >
                   {status.name}
                 </Option>
               ))}
@@ -185,15 +237,6 @@ export default function RestaurantOrders(props) {
         </DialogBody>
 
         <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            disabled={editDialogLoading}
-            onClick={() => setEditDialog(false)}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
           <Button
             variant="gradient"
             color="blue"
