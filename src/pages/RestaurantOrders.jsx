@@ -173,10 +173,10 @@ export default function RestaurantOrders(props) {
               onChange={(val) => setStatus(val)}
             >
               {[
-                // { name: "Ready", value: "isReady" },
-                { name: "Delivered", value: "isDelivered" },
+                { name: "Ready", value: "isReady", isDisable: selectedItem.status == 'Ready' },
+                { name: "Delivered", value: "isDelivered", isDisable: selectedItem.status == 'Delivered' },
               ].map((status) => (
-                <Option value={status.value} key={status.value}>
+                <Option value={status.value} key={status.value} disabled={status.isDisable}>
                   {status.name}
                 </Option>
               ))}
