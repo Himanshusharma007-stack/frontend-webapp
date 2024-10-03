@@ -29,12 +29,21 @@ export default function RestaurantOrders(props) {
       value: "userName",
       render: (item) => (
         <div className="text-sm font-normal">
-          <div>{item.userName}</div>
-          <div>{item.userMobile}</div>
+          <div className="font-semibold">{item.userName}</div>
+          <div className="text-xs">{item.userMobile}</div>
         </div>
       ),
     },
-    { title: "Items", value: "items" },
+    {
+      title: "Orderid / Items",
+      value: "items",
+      render: (item) => (
+        <div className="text-sm font-normal">
+          <div className="font-semibold">{item._id}</div>
+          <div className="text-xs">{item.items}</div>
+        </div>
+      ),
+    },
     { title: "Amount(in ₹)", value: "amount" },
     {
       title: "Status",
