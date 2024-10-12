@@ -15,7 +15,7 @@ import TnC from "../components/TnC";
 import PrivacyPolicy from "../components/PrivacyPolicy";
 import RefundsandCancellation from "../components/Refunds&Cancellations";
 import ShippingPolicy from "../components/ShippingPolicy";
-import { Button } from "@material-tailwind/react";
+import { Button, Radio } from "@material-tailwind/react";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
 
 export default function Checkout() {
@@ -28,21 +28,8 @@ export default function Checkout() {
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
+    type: "takeAway", // Default value for radio buttons
   });
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     const setUserDetails = async () => {
-  //       try {
-  //         console.log("user ------------------------- ", user);
-  //       } catch (error) {
-  //         console.error("Error calling API:", error);
-  //       }
-  //     };
-
-  //     setUserDetails();
-  //   }
-  // }, [isAuthenticated, user]);
 
   const removeFromCartClicked = (item) => {
     dispatch(decreament(item));
@@ -73,11 +60,19 @@ export default function Checkout() {
   }, [user]);
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [id]: value,
-    }));
+    const { id, value, type: inputType } = e.target;
+
+    if (inputType === "radio") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        type: value,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [id]: value,
+      }));
+    }
   };
 
   return (
@@ -130,11 +125,34 @@ export default function Checkout() {
                             id="mobile"
                           />
                         </div>
+
+                        <div className="flex gap-10" onChange={handleChange}>
+                          <Radio
+                            name="type"
+                            label="Dine In"
+                            value="dineIn"
+                            checked={formData.type === "dineIn"}
+                            onChange={handleChange}
+                          />
+                          <Radio
+                            name="type"
+                            label="Take Away"
+                            value="takeAway"
+                            checked={formData.type === "takeAway"}
+                            onChange={handleChange}
+                          />
+                        </div>
+
+                        <Notification
+                          msg="Note: Make half payment here and half on restaurant."
+                          hideCloseBtn={true}
+                        />
                       </div>
                       <PaymentForm
                         amount={totalAmount}
                         name={formData.name}
                         mobile={formData.mobile}
+                        orderType={formData.type}
                       />
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 text-xs mt-6 text-center">

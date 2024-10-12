@@ -38,6 +38,7 @@ const PaymentForm = (props) => {
           codAmount: codAmount,
           name: props.name?.trim(),
           mobile: props.mobile?.trim(),
+          orderType: props.orderType,
           orderData: cartArr,
         }
         let orderCreatedRes = createOrder(obj);

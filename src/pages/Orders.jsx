@@ -9,6 +9,7 @@ import statusChecker from "../utils/checkStatus.js";
 import localStorageFunctions from "../utils/localStorageFunctions.js";
 import RefreshBtn from "../components/RefreshBtn.jsx";
 import { useLocation } from "react-router-dom";
+import OrderType from "../utils/getOrderType.js";
 
 export function Orders() {
   const location = useLocation();
@@ -101,6 +102,7 @@ export function Orders() {
                     amount: order.amount,
                     paidAmount: order.paidAmount,
                     codAmount: order.codAmount,
+                    orderType: OrderType.getOrderType(order.orderType),
                     createdAt: dateFormatter.formatDate(
                       order.createdAt,
                       "MMMM Do YYYY, h:mm:ss a"

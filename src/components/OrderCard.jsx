@@ -6,6 +6,7 @@ export default function OrderCard(props) {
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1">
             {[
               ["Order ID", props?.rawData?.orderId || ""],
+              ["Order Type", props?.rawData?.orderType || 0],
               ["Date", props?.rawData?.createdAt],
               ["COD Amount", "₹" + props?.rawData?.codAmount || 0],
               ["Paid Amount", "₹" + props?.rawData?.paidAmount || 0],
