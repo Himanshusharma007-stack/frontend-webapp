@@ -16,6 +16,7 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 import { updateOrderStatus } from "../services/Order";
+import OrderType from "../utils/getOrderType.js";
 
 export default function RestaurantOrders(props) {
   let [isLoading, setIsLoading] = useState(false);
@@ -43,6 +44,15 @@ export default function RestaurantOrders(props) {
         <div className="text-sm font-normal">
           <div className="font-semibold">{item._id}</div>
           <div className="text-xs">{item.items}</div>
+        </div>
+      ),
+    },
+    {
+      title: "Type",
+      value: "items",
+      render: (item) => (
+        <div className="text-sm font-normal">
+          <div className="font-semibold">{OrderType.getOrderType(item.orderType)}</div>
         </div>
       ),
     },
@@ -136,6 +146,7 @@ export default function RestaurantOrders(props) {
         codAmount: data?.codAmount,
         paidAmount: data?.paidAmount,
         amount: data?.amount,
+        orderType: data?.orderType,
         items: data?.items?.map((item) => item?.name)?.join(", "),
         userName: data?.user?.name,
         userMobile: data?.user?.mobile,
