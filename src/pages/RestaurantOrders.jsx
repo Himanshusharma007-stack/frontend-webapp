@@ -52,7 +52,9 @@ export default function RestaurantOrders(props) {
       value: "items",
       render: (item) => (
         <div className="text-sm font-normal">
-          <div className="font-semibold">{OrderType.getOrderType(item.orderType)}</div>
+          <div className="font-semibold">
+            {OrderType.getOrderType(item.orderType)}
+          </div>
         </div>
       ),
     },
@@ -256,25 +258,24 @@ export default function RestaurantOrders(props) {
                 ))}
               </Select>
             </div>
-
-            {status == "isDelivered" && (
-              <div className="flex items-center">
-                <Checkbox
-                  label={
-                    <>
-                      Is{" "}
-                      <span className="font-bold">
-                        ₹{selectedItem?.codAmount || 0}
-                      </span>{" "}
-                      COD Amount taken by the restaurant?
-                    </>
-                  }
-                  value={isAmountTaken}
-                  onChange={() => setIsAmountTaken(!isAmountTaken)}
-                />
-              </div>
-            )}
           </div>
+          {status == "isDelivered" && (
+            <div className="flex items-center">
+              <Checkbox
+                label={
+                  <>
+                    Is{" "}
+                    <span className="font-bold">
+                      ₹{selectedItem?.codAmount || 0}
+                    </span>{" "}
+                    COD Amount taken by the restaurant?
+                  </>
+                }
+                value={isAmountTaken}
+                onChange={() => setIsAmountTaken(!isAmountTaken)}
+              />
+            </div>
+          )}
         </DialogBody>
 
         <DialogFooter>
