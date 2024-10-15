@@ -4,7 +4,7 @@ import { RotateCw } from "lucide-react";
 const TABLE_HEAD = [
   "Name",
   "Image",
-  'Category',
+  "Category",
   "Description",
   "In Stock",
   "Action",
@@ -33,11 +33,11 @@ export function Table(props) {
           </div>
         )}
         <Card
-          className={`h-full w-full overflow-scroll ${
+          className={`h-full w-screen sm:w-full overflow-x-scroll ${
             props.isLoading ? "opacity-50 pointer-events-none" : ""
           }`}
         >
-          <table className="min-w-full divide-y divide-gray-200">
+          <table>
             <thead>
               <tr>
                 {TABLE_HEAD.map((head) => (
@@ -91,12 +91,16 @@ export function Table(props) {
                         </Typography>
                       </td>
                       <td>
-                        {!imageUrl ? '-' : (<img
-                          className="w-8 h-8 rounded-full"
-                          src={imageUrl}
-                          alt="Avatar"
-                          loading='eager'
-                        />)}
+                        {!imageUrl ? (
+                          "-"
+                        ) : (
+                          <img
+                            className="w-8 h-8 rounded-full"
+                            src={imageUrl}
+                            alt="Avatar"
+                            loading="eager"
+                          />
+                        )}
                       </td>
                       <td className={classes}>
                         <Typography
