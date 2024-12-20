@@ -11,12 +11,14 @@ import {
   DialogBody,
   DialogHeader,
   DialogFooter,
+  Typography,
+  IconButton,
 } from "@material-tailwind/react";
 import { Select, Option } from "@material-tailwind/react";
-import { X } from "lucide-react";
 
-export default function RestoMenu() {
-  const { id } = useParams();
+export default function RestoMenu(props) {
+  const { id: paramId } = useParams();
+  const id = props?.restaurantId || paramId;
   const [loading, setLoading] = useState(false);
   const [menus, setMenus] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -89,14 +91,14 @@ export default function RestoMenu() {
 
   useEffect(() => {
     getMenuByRestoId();
-  }, []);
+  }, [id]);
 
   return (
     <>
-      <div className="text-center uppercase">
+      {!props.disableHeading && <div className="text-center uppercase">
         <h1 className="text-xl font-bold">{data?.name}</h1>
         <p className="text-lg font-light">{data?.cuisine}</p>
-      </div>
+      </div>}
       <input
         className="flex mt-4 h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
         type="text"
@@ -130,17 +132,35 @@ export default function RestoMenu() {
         ))
       )}
 
-      <Dialog open={open} handler={handleOpen} className="p-4">
-        <DialogHeader className="flex justify-between items-center">
-          {selectedItem?.name}
-          <Button
+      <Dialog open={open} handler={handleOpen}>
+        <DialogHeader className="justify-between">
+          <div>
+            <Typography variant="h5" color="blue-gray">
+              {selectedItem?.name}
+            </Typography>
+          </div>
+
+          <IconButton
+            color="blue-gray"
+            size="sm"
             variant="text"
-            color="red"
             onClick={handleOpen}
-            className="rounded-full"
           >
-            <X className="h-6 w-6" aria-hidden="true" />
-          </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </IconButton>
         </DialogHeader>
         <DialogBody>
           <Select

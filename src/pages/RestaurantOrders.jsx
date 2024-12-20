@@ -11,8 +11,12 @@ import {
   DialogFooter,
   Select,
   Option,
+  Typography,
+  IconButton,
+  Checkbox,
 } from "@material-tailwind/react";
 import { updateOrderStatus } from "../services/Order";
+import OrderType from "../utils/getOrderType.js";
 
 export default function RestaurantOrders(props) {
   let [isLoading, setIsLoading] = useState(false);
@@ -21,18 +25,39 @@ export default function RestaurantOrders(props) {
   const [selectedItem, setSelectedItem] = useState({});
   const [status, setStatus] = useState(null);
   const [editDialogLoading, setEditDialogLoading] = useState(false);
+  const [isAmountTaken, setIsAmountTaken] = useState(false);
   let header = [
     {
       title: "Username / Usermobile",
       value: "userName",
       render: (item) => (
         <div className="text-sm font-normal">
-          <div>{item.userName}</div>
-          <div>{item.userMobile}</div>
+          <div className="font-semibold">{item.userName}</div>
+          <div className="text-xs">{item.userMobile}</div>
         </div>
       ),
     },
-    { title: "Items", value: "items" },
+    {
+      title: "Orderid / Items",
+      value: "items",
+      render: (item) => (
+        <div className="text-sm font-normal">
+          <div className="font-semibold">{item._id}</div>
+          <div className="text-xs">{item.items}</div>
+        </div>
+      ),
+    },
+    {
+      title: "Type",
+      value: "items",
+      render: (item) => (
+        <div className="text-sm font-normal">
+          <div className="font-semibold">
+            {OrderType.getOrderType(item.orderType)}
+          </div>
+        </div>
+      ),
+    },
     { title: "Amount(in ₹)", value: "amount" },
     {
       title: "Status",
@@ -120,7 +145,10 @@ export default function RestaurantOrders(props) {
     return orderData.map((data) => {
       return {
         _id: data?._id,
+        codAmount: data?.codAmount,
+        paidAmount: data?.paidAmount,
         amount: data?.amount,
+        orderType: data?.orderType,
         items: data?.items?.map((item) => item?.name)?.join(", "),
         userName: data?.user?.name,
         userMobile: data?.user?.mobile,
@@ -145,6 +173,12 @@ export default function RestaurantOrders(props) {
     }
   }
 
+  function handleDialog() {
+    setEditDialog(false);
+    setStatus(null);
+    setIsAmountTaken(false);
+  }
+
   return (
     <>
       <DynamicTable
@@ -155,8 +189,37 @@ export default function RestaurantOrders(props) {
       />
 
       <Dialog open={editDialog}>
-        <DialogHeader>
-          {selectedItem.userName}({selectedItem.userMobile})
+        <DialogHeader className="justify-between">
+          <div>
+            <Typography variant="h5" color="blue-gray">
+              {selectedItem.userName}({selectedItem.userMobile})
+            </Typography>
+            <Typography color="gray" variant="paragraph">
+              {selectedItem._id}
+            </Typography>
+          </div>
+
+          <IconButton
+            color="blue-gray"
+            size="sm"
+            variant="text"
+            onClick={handleDialog}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </IconButton>
         </DialogHeader>
 
         <DialogBody>
@@ -166,38 +229,64 @@ export default function RestaurantOrders(props) {
             <strong>{selectedItem?.items}</strong> with an amount of{" "}
             <strong> ₹{selectedItem?.amount} </strong> ?
           </div>
-          <div className="mt-3">
-            <Select
-              label="Status"
-              value={status}
-              onChange={(val) => setStatus(val)}
-            >
-              {[
-                // { name: "Ready", value: "isReady" },
-                { name: "Delivered", value: "isDelivered" },
-              ].map((status) => (
-                <Option value={status.value} key={status.value}>
-                  {status.name}
-                </Option>
-              ))}
-            </Select>
+          <div className="mt-3 flex items-center gap-6">
+            <div className="w-max">
+              <Select
+                label="Status"
+                value={status}
+                onChange={(val) => setStatus(val)}
+              >
+                {[
+                  {
+                    name: "Ready",
+                    value: "isReady",
+                    isDisable: selectedItem.status == "Ready",
+                  },
+                  {
+                    name: "Delivered",
+                    value: "isDelivered",
+                    isDisable: selectedItem.status == "Delivered",
+                  },
+                ].map((status) => (
+                  <Option
+                    value={status.value}
+                    key={status.value}
+                    disabled={status.isDisable}
+                  >
+                    {status.name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
           </div>
+          {status == "isDelivered" && (
+            <div className="flex items-center">
+              <Checkbox
+                label={
+                  <>
+                    Is{" "}
+                    <span className="font-bold">
+                      ₹{selectedItem?.codAmount || 0}
+                    </span>{" "}
+                    COD Amount taken by the restaurant?
+                  </>
+                }
+                value={isAmountTaken}
+                onChange={() => setIsAmountTaken(!isAmountTaken)}
+              />
+            </div>
+          )}
         </DialogBody>
 
         <DialogFooter>
           <Button
-            variant="text"
-            color="red"
-            disabled={editDialogLoading}
-            onClick={() => setEditDialog(false)}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button
             variant="gradient"
             color="blue"
-            disabled={!status || editDialogLoading}
+            disabled={
+              !status ||
+              editDialogLoading ||
+              (status == "isDelivered" && !isAmountTaken)
+            }
             loading={editDialogLoading}
             onClick={() => updateStatus()}
           >

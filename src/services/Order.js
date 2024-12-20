@@ -11,9 +11,19 @@ const apiClient = axios.create({
 });
 
 // Function to get the list of restaurants
-export const createOrder = async ({ orderId, paymentId, userId, amount, name, mobile, orderData }) => {
+export const createOrder = async ({ orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType }) => {
   try {
-    const response = await apiClient.post("/order/create", { orderId, paymentId, userId, amount, name, mobile, orderData });
+    const response = await apiClient.post("/order/create", { orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching restaurants:", error);
+    throw error.response.data;
+  }
+};
+
+export const createOrderByRestaurant = async ({ orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType }) => {
+  try {
+    const response = await apiClient.post("/order/create", { orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType });
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
