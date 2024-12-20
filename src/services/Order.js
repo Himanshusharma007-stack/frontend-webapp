@@ -21,6 +21,16 @@ export const createOrder = async ({ orderId, paymentId, userId, amount, name, mo
   }
 };
 
+export const createOrderByRestaurant = async ({ orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType }) => {
+  try {
+    const response = await apiClient.post("/order/create", { orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching restaurants:", error);
+    throw error.response.data;
+  }
+};
+
 export const getOrdersDataByUserId = async (id) => {
   try {
     const response = await apiClient.get(`/order/${id}`);

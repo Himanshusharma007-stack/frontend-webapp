@@ -13,6 +13,8 @@ import {
   TabPanel,
 } from "@material-tailwind/react";
 import RestaurantOrders from "./RestaurantOrders.jsx";
+import RestoMenu from "./RestoMenu.jsx";
+import RestoBilling from "./RestoBilling.jsx";
 
 export default function RestaurantItems() {
   const location = useLocation();
@@ -36,6 +38,11 @@ export default function RestaurantItems() {
       value: "orders",
       desc: `Because it's about motivating the doers. Because I'm here
       to follow my dreams and inspire other people to follow their dreams, too.`,
+    },
+    {
+      label: "Billing",
+      value: "billing",
+      desc: `This tab is use for resolving billing purpose.`,
     },
   ];
 
@@ -123,6 +130,10 @@ export default function RestaurantItems() {
             </TabPanel>
             <TabPanel value={"orders"}>
               <RestaurantOrders restaurantData={data} />
+            </TabPanel>
+
+            <TabPanel value={ 'billing' } >
+              {localStorageFunctions.getDatafromLocalstorage("data")?._id && <RestoBilling restaurantId={localStorageFunctions.getDatafromLocalstorage("data")._id} />}
             </TabPanel>
 
           </TabsBody>
