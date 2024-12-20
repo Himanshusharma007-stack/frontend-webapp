@@ -9,7 +9,7 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import {
+import { 
   increament,
   decreament,
   deletefromCart,
