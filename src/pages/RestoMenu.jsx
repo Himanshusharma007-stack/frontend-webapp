@@ -16,8 +16,9 @@ import {
 } from "@material-tailwind/react";
 import { Select, Option } from "@material-tailwind/react";
 
-export default function RestoMenu() {
-  const { id } = useParams();
+export default function RestoMenu(props) {
+  const { id: paramId } = useParams();
+  const id = props?.restaurantId || paramId;
   const [loading, setLoading] = useState(false);
   const [menus, setMenus] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -90,14 +91,14 @@ export default function RestoMenu() {
 
   useEffect(() => {
     getMenuByRestoId();
-  }, []);
+  }, [id]);
 
   return (
     <>
-      <div className="text-center uppercase">
+      {!props.disableHeading && <div className="text-center uppercase">
         <h1 className="text-xl font-bold">{data?.name}</h1>
         <p className="text-lg font-light">{data?.cuisine}</p>
-      </div>
+      </div>}
       <input
         className="flex mt-4 h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
         type="text"
@@ -137,9 +138,6 @@ export default function RestoMenu() {
             <Typography variant="h5" color="blue-gray">
               {selectedItem?.name}
             </Typography>
-            {/* <Typography color="gray" variant="paragraph">
-              {selectedItem._id}
-            </Typography> */}
           </div>
 
           <IconButton
