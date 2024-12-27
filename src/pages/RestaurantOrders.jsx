@@ -27,7 +27,7 @@ export default function RestaurantOrders(props) {
   const [editDialogLoading, setEditDialogLoading] = useState(false);
   const [isAmountTaken, setIsAmountTaken] = useState(false);
   let header = [
-    {
+    { 
       title: "Username / Usermobile",
       value: "userName",
       render: (item) => (
@@ -44,6 +44,16 @@ export default function RestaurantOrders(props) {
         <div className="text-sm font-normal">
           <div className="font-semibold">{item._id}</div>
           <div className="text-xs">{item.items}</div>
+        </div>
+      ),
+    },
+    { 
+      title: "CreatedByRestaurant / PaymentMode",
+      value: "items",
+      render: (item) => (
+        <div className="text-sm font-normal"> 
+          <div className="font-semibold">{item.createdByRestaurant}</div>
+          <div className="text-xs">{item.paymentMode}</div>
         </div>
       ),
     },
@@ -149,6 +159,8 @@ export default function RestaurantOrders(props) {
         paidAmount: data?.paidAmount,
         amount: data?.amount,
         orderType: data?.orderType,
+        createdByRestaurant: data?.createdByRestaurant ? "Yes" : "No",
+        paymentMode: data?.paymentMode || "NA",
         items: data?.items?.map((item) => item?.name)?.join(", "),
         userName: data?.user?.name,
         userMobile: data?.user?.mobile,
@@ -159,10 +171,6 @@ export default function RestaurantOrders(props) {
       };
     });
   }, [orderData]);
-
-  useEffect(() => {
-    getOrdersData();
-  }, [props.restaurantData?._id]);
 
   async function refreshBtnClicked() {
     try {
@@ -178,6 +186,10 @@ export default function RestaurantOrders(props) {
     setStatus(null);
     setIsAmountTaken(false);
   }
+
+  useEffect(() => {
+    refreshBtnClicked();
+  }, [props.restaurantData?._id]);
 
   return (
     <>

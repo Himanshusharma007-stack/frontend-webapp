@@ -9,25 +9,36 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import { 
+import {
   increament,
   decreament,
   deletefromCart,
   getTotalAmount,
+  reset,
 } from "../features/cart/cartSlice";
 import { Trash } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
+import { createOrderByRestaurant } from "../services/Order";
 
 export default function BillingDialog() {
   const [open, setOpen] = React.useState(false);
   const cartArr = useSelector((state) => state.cart.value);
+  const [loading, setLoading] = React.useState({
+    createOrder: false,
+  });
   const totalAmount = useSelector(getTotalAmount);
   const dispatch = useDispatch();
   const [formData, setFormData] = React.useState({
     customerName: null,
     customerMobile: null,
-    type: 'dineIn'
-  })
+    type: "dineIn",
+    paymentMode: "cash"
+  });
+
+  const [errors, setErrors] = React.useState({
+    customerName: "",
+    customerMobile: "",
+  });
 
   const handleOpen = () => setOpen(!open);
 
@@ -39,13 +50,32 @@ export default function BillingDialog() {
     dispatch(increament(item));
   };
 
+  const validateFields = () => {
+    let valid = true;
+    const newErrors = {};
+
+    if (!formData.customerName?.trim()) {
+      newErrors.customerName = "Customer name is required.";
+      valid = false;
+    }
+
+    if (!/^\d{10}$/.test(formData.customerMobile)) {
+      newErrors.customerMobile = "Mobile number must be 10 digits.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+
   const handleChange = (e) => {
-    const { id, value, type: inputType } = e.target;
+    const { id, value, type: inputType, name } = e.target;
 
     if (inputType === "radio") {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        type: value,
+        [name]: value,
       }));
     } else {
       setFormData((prevFormData) => ({
@@ -54,6 +84,47 @@ export default function BillingDialog() {
       }));
     }
   };
+
+  function resetFields() {
+    setFormData({
+      customerName: null,
+      customerMobile: null,
+      type: "dineIn",
+      paymentMode: 'cash'
+    });
+    setErrors({});
+    dispatch(reset());
+  }
+
+  async function createOrder() {
+    if (!validateFields()) return;
+    try {
+      setLoading({ createOrder: true });
+      let obj = {
+        amount: totalAmount,
+        name: formData.customerName,
+        mobile: formData.customerMobile,
+        orderType: formData.type,
+        paymentMode: formData.paymentMode,
+        orderData: cartArr,
+      };
+      let res = await createOrderByRestaurant(obj);
+      if (res.success) {
+        handleOpen();
+        resetFields();
+      }
+    } catch (e) {
+      console.error("Error -----> ", e);
+      throw new Error(e);
+    } finally {
+      setLoading({ createOrder: false });
+    }
+  }
+
+  React.useEffect(() => {
+    validateFields()
+  }, [formData.customerMobile, formData.customerName])
+
   return (
     <>
       {!cartArr?.length ? (
@@ -69,6 +140,7 @@ export default function BillingDialog() {
         <DialogBody>
           <div className="font-bold text-lg mb-4 text-black flex justify-between">
             <div>Enter Customer Details.</div>
+
 
             <IconButton
               color="blue-gray"
@@ -94,13 +166,67 @@ export default function BillingDialog() {
           </div>
           <div>
             <div className="md:flex">
-              <Input label="Enter Customer Name*" value={formData.customerName} id="customerName" onChange={handleChange} />
+            <div className="w-full">
+                <Input
+                  label="Enter Customer Name*"
+                  value={formData.customerName}
+                  id="customerName"
+                  onChange={handleChange}
+                  error={!!errors.customerName}
+                />
+                {errors.customerName && (
+                  <p className="text-red-500 text-sm">{errors.customerName}</p>
+                )}
+              </div>
               &nbsp;
-              <Input label="Enter Customer Mobile*" value={formData.customerMobile} id="customerMobile" onChange={handleChange} />
+              <div className="w-full">
+                <Input
+                  label="Enter Customer Mobile*"
+                  value={formData.customerMobile}
+                  id="customerMobile"
+                  onChange={handleChange}
+                  error={!!errors.customerMobile}
+                />
+                {errors.customerMobile && (
+                  <p className="text-red-500 text-sm">{errors.customerMobile}</p>
+                )}
+              </div>
             </div>
+
+            <div className="flex justify-between">
             <div>
-              <Radio name="type" label="Dine In" value="dineIn" checked={formData.type === "dineIn"} onChange={handleChange} />
-              <Radio name="type" label="Take Away" value="takeAway" checked={formData.type === "takeAway"} onChange={handleChange} />
+              <Radio
+                name="type"
+                label="Dine In"
+                value="dineIn"
+                checked={formData.type === "dineIn"}
+                onChange={handleChange}
+              />
+              <Radio
+                name="type"
+                label="Take Away"
+                value="takeAway"
+                checked={formData.type === "takeAway"}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+            <Radio
+                name="paymentMode"
+                label="Cash"
+                value="cash"
+                checked={formData.paymentMode === "cash"}
+                onChange={handleChange}
+              />
+              <Radio
+                name="paymentMode"
+                label="Online"
+                value="online"
+                checked={formData.paymentMode === "online"}
+                onChange={handleChange}
+              />
+            </div>
             </div>
           </div>
 
@@ -185,7 +311,13 @@ export default function BillingDialog() {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
+          <Button
+            variant="gradient"
+            color="green"
+            loading={loading.createOrder}
+            onClick={createOrder}
+            disabled={!cartArr?.length || loading.createOrder || errors.customerName || errors.customerMobile}
+          >
             <span>Create Order</span>
           </Button>
         </DialogFooter>
