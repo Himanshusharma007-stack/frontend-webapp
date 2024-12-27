@@ -7,13 +7,35 @@ const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
-  },
+  }, 
 });
 
 // Function to get the list of restaurants
-export const createOrder = async ({ orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType }) => {
+export const createOrder = async ({
+  orderId,
+  paymentId,
+  userId,
+  amount,
+  name,
+  mobile,
+  orderData,
+  paidAmount,
+  codAmount,
+  orderType,
+}) => {
   try {
-    const response = await apiClient.post("/order/create", { orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType });
+    const response = await apiClient.post("/order/create", {
+      orderId,
+      paymentId,
+      userId,
+      amount,
+      name,
+      mobile,
+      orderData,
+      paidAmount,
+      codAmount,
+      orderType,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
@@ -21,9 +43,23 @@ export const createOrder = async ({ orderId, paymentId, userId, amount, name, mo
   }
 };
 
-export const createOrderByRestaurant = async ({ orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType }) => {
+export const createOrderByRestaurant = async ({
+  amount,
+  name,
+  mobile,
+  orderData,
+  orderType,
+  paymentMode
+}) => {
   try {
-    const response = await apiClient.post("/order/create", { orderId, paymentId, userId, amount, name, mobile, orderData, paidAmount, codAmount, orderType });
+    const response = await apiClient.post("/order/createOrderByRestaurant", {
+      amount,
+      name,
+      mobile,
+      orderData,
+      orderType,
+      paymentMode
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
@@ -53,7 +89,10 @@ export const getOrdersDataRestaurantId = async (id) => {
 
 export const updateOrderStatus = async ({ orderId, status }) => {
   try {
-    const response = await apiClient.patch("/order/update", { orderId, status });
+    const response = await apiClient.patch("/order/update", {
+      orderId,
+      status,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching restaurants:", error);
